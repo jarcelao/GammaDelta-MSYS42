@@ -109,7 +109,7 @@ return [
     */
 
     'resource'      => [
-        'stylesheets' => [],
+        'stylesheets' => ['app.css',],
         'scripts'     => [],
     ],
 
@@ -128,8 +128,8 @@ return [
     */
 
     'template'      => [
-        'header' => '',
-        'footer' => '',
+        'header' => 'brand.header',
+        'footer' => 'brand.footer',
     ],
 
     /*

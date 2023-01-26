@@ -1,0 +1,21 @@
+.bg-dark {
+    --bs-dark-rgb: 79, 21, 20 ;
+}
+
+a {
+    transition-property: background-color, color;
+}
+
+a:hover {
+    background-color:  white !important;
+    color: #4F1514 !important;
+}
+
+a:hover .text-white {
+    color: #4F1514 !important;
+}
+
+.active a {
+    background-color: white !important;
+    color: #4F1514 !important;
+}
