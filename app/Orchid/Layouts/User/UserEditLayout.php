@@ -35,7 +35,7 @@ class UserEditLayout extends Rows
                 ->type('text')
                 ->max(255)
                 ->title(__('Contact Number'))
-                ->placeholder(__('(+XXX)XXXXXXXXX (e.g. +60123456789)')),
+                ->help(__('e.g. +60123456789'))
         ];
     }
 }
