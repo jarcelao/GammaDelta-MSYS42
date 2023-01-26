@@ -30,6 +30,12 @@ class UserEditLayout extends Rows
                 ->required()
                 ->title(__('Email'))
                 ->placeholder(__('Email')),
+
+            Input::make('user.contact_number')
+                ->type('text')
+                ->max(255)
+                ->title(__('Contact Number'))
+                ->placeholder(__('(+XXX)XXXXXXXXX (e.g. +60123456789)')),
         ];
     }
 }
