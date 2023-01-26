@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Orchid\Screens\User;
 
 use App\Orchid\Layouts\User\ProfilePasswordLayout;
-use App\Orchid\Layouts\User\UserViewLayout;
+use App\Orchid\Layouts\User\UserEditLayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Orchid\Platform\Models\User;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Screen;
@@ -48,7 +50,7 @@ class UserProfileScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'View your account details and update your password';
+        return 'Update your account details such as name, email address and password';
     }
 
     /**
@@ -67,9 +69,15 @@ class UserProfileScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block(Layout::view('user.viewuser'))
+            Layout::block(UserEditLayout::class)
                 ->title(__('Profile Information'))
-                ->description(__("Request your administrator to update your account details.")),
+                ->description(__("Update your account's profile information and email address."))
+                ->commands(
+                    Button::make(__('Save'))
+                        ->type(Color::DEFAULT())
+                        ->icon('check')
+                        ->method('save')
+                ),
 
             Layout::block(ProfilePasswordLayout::class)
                 ->title(__('Update Password'))
@@ -81,6 +89,26 @@ class UserProfileScreen extends Screen
                         ->method('changePassword')
                 ),
         ];
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function save(Request $request): void
+    {
+        $request->validate([
+            'user.name'  => 'required|string',
+            'user.email' => [
+                'required',
+                Rule::unique(User::class, 'email')->ignore($request->user()),
+            ],
+        ]);
+
+        $request->user()
+            ->fill($request->get('user'))
+            ->save();
+
+        Toast::info(__('Profile updated.'));
     }
 
     /**
