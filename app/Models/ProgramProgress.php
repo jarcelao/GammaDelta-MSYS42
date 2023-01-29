@@ -24,4 +24,12 @@ class ProgramProgress extends Model
     {
         return $this->belongsTo(Program::class);
     }
+
+    /**
+     * Get the budget requests for the progress report.
+     */
+    public function budgetRequests()
+    {
+        return $this->hasMany(ProgramProgressBudgetRequest::class);
+    }
 }
