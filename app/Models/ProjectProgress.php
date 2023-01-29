@@ -40,4 +40,12 @@ class ProjectProgress extends Model
     {
         return $this->hasMany(Workshop::class);
     }
+
+    /**
+     * Get the partners for the progress.
+     */
+    public function partners()
+    {
+        return $this->hasMany(Partner::class);
+    }
 }
