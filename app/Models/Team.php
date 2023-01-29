@@ -37,4 +37,11 @@ class Team extends Model
         'people_group_id',
         'team_leader',
     ];
+
+    /**
+     * Get the team members for the team.
+     */
+    public function teamMembers() {
+        return $this->hasMany('App\Models\TeamMember');
+    }
 }
