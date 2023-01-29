@@ -24,4 +24,12 @@ class ProjectProgress extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    /**
+     * Get the budget requests for the progress.
+     */
+    public function budgetRequests()
+    {
+        return $this->hasMany(ProjectProgressBudgetRequest::class);
+    }
 }
