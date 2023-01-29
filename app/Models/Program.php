@@ -43,4 +43,12 @@ class Program extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    /**
+     * Get the progress reports for the program.
+     */
+    public function progress()
+    {
+        return $this->hasMany(ProgramProgress::class);
+    }
 }
