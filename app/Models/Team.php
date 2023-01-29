@@ -44,4 +44,12 @@ class Team extends Model
     public function teamMembers() {
         return $this->hasMany('App\Models\TeamMember');
     }
+
+    /**
+     * Get the program progress for the team.
+     */
+    public function programProgress()
+    {
+        return $this->hasMany('App\Models\TeamProgramProgress');
+    }
 }
