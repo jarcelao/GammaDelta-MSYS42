@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('program_story_sets', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('program_id')->constrained();
+            $table->foreignId('story_set_id')->constrained();
+            $table->string('theme');
         });
     }
 
