@@ -32,4 +32,12 @@ class ProjectProgress extends Model
     {
         return $this->hasMany(ProjectProgressBudgetRequest::class);
     }
+
+    /**
+     * Get the workshops for the progress.
+     */
+    public function workshops()
+    {
+        return $this->hasMany(Workshop::class);
+    }
 }
