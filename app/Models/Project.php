@@ -41,4 +41,12 @@ class Project extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    /**
+     * Get the progress for the project.
+     */
+    public function progress()
+    {
+        return $this->hasMany(ProjectProgress::class);
+    }
 }
