@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('project_progress_id')->constrained();
+            $table->foreignId('project_progress_id')->constrained('project_progress');
             $table->string('point_person')->nullable();
             $table->string('cluster')->nullable();
         });

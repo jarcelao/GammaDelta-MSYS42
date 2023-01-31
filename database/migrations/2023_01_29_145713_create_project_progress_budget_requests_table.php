@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('project_progress_budget_requests', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('project_progress_id')->constrained();
+            $table->foreignId('project_progress_id')->constrained('project_progress');
             $table->string('account')->nullable();
             $table->float('amount')->nullable();
         });

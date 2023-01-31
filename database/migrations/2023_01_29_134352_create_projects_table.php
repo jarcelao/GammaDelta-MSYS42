@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('group_id')->constrained();
+            $table->foreignId('people_groups_id')->constrained();
             $table->string('title');
             $table->text('purpose')->nullable();
             $table->text('indicators')->nullable();

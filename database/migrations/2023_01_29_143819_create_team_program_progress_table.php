@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('team_program_progress', function (Blueprint $table) {
             $table->id();
             $table->foreignId('team_id')->constrained();
-            $table->foreignId('program_progress_id')->constrained();
+            $table->foreignId('program_progress_id')->constrained('program_progress');
             $table->string('active_status');
             $table->integer('cycle_level');
         });
