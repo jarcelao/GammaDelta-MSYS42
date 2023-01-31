@@ -8,6 +8,8 @@ use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
+use App\Orchid\Screens\PeopleGroup\PeopleGroupEditScreen;
+use App\Orchid\Screens\PeopleGroup\PeopleGroupListScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -74,3 +76,17 @@ Route::screen('roles', RoleListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Roles'), route('platform.systems.roles')));
+
+// Platform > People Group
+Route::screen('people-groups', PeopleGroupListScreen::class)
+    ->name('platform.people-group')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('People Group'), route('platform.people-group')));
+
+// Platform > People Group > Edit
+Route::screen('people-group/{peopleGroup?}', PeopleGroupEditScreen::class)
+    ->name('platform.people-group.edit')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Edit People Group'), route('platform.people-group.edit')));
