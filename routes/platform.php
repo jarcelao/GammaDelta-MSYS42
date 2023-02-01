@@ -88,5 +88,5 @@ Route::screen('people-groups', PeopleGroupListScreen::class)
 Route::screen('people-group/{peopleGroup?}', PeopleGroupEditScreen::class)
     ->name('platform.people-group.edit')
     ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.index')
-        ->push(__('Edit People Group'), route('platform.people-group.edit')));
+        ->parent('platform.people-group')
+        ->push(__('Manage'), route('platform.people-group.edit')));
