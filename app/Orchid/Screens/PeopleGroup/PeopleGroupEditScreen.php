@@ -117,7 +117,13 @@ class PeopleGroupEditScreen extends Screen
      */
     public function createOrUpdate(PeopleGroup $peopleGroup, Request $request)
     {
-        $peopleGroup->fill($request->get('people_group'))->save();
+        if ($peopleGroup->exists) {
+            $peopleGroup->fill($request->get('peopleGroup'))->save();
+            Toast::success('People group updated');
+            return redirect()->route('platform.people-group.edit', $peopleGroup);
+        }
+
+        $peopleGroup->fill($request->get('peopleGroup'))->save();
         Toast::success('People group created');
         return redirect()->route('platform.people-group');
     }
@@ -133,6 +139,6 @@ class PeopleGroupEditScreen extends Screen
     {
         $peopleGroup->delete();
         Toast::success('People group deleted');
-        return redirect()->route('platform.index');
+        return redirect()->route('platform.people-group');
     }
 }

@@ -67,10 +67,11 @@ class PeopleGroupListScreen extends Screen
                 TD::make('country', 'Country'),
                 TD::make('region', 'Region'),
                 TD::make('language', 'Language'),
-                TD::make('Actions')
+                TD::make('')
                     ->render(function (PeopleGroup $peopleGroup) {
-                        return Link::make('Edit')
-                            ->route('platform.people-group.edit', $peopleGroup->id);
+                        return Link::make('')
+                            ->route('platform.people-group.edit', $peopleGroup->id)
+                            ->icon('pencil');
                     }),
             ]),
         ];
