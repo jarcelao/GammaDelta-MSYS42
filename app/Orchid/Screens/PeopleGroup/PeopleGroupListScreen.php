@@ -4,6 +4,9 @@ namespace App\Orchid\Screens\PeopleGroup;
 
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Layout;
+use Orchid\Screen\TD;
+use App\Models\PeopleGroup;
 
 class PeopleGroupListScreen extends Screen
 {
@@ -14,7 +17,9 @@ class PeopleGroupListScreen extends Screen
      */
     public function query(): iterable
     {
-        return [];
+        return [
+            'peopleGroups' => PeopleGroup::paginate(),
+        ];
     }
 
     /**
@@ -24,7 +29,15 @@ class PeopleGroupListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'PeopleGroupListScreen';
+        return 'People Groups';
+    }
+
+    /**
+     * The description of the screen displayed in the header.
+     */
+    public function description(): ?string
+    {
+        return 'Browse people groups';
     }
 
     /**
@@ -48,6 +61,18 @@ class PeopleGroupListScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            Layout::table('peopleGroups', [
+                TD::make('name', 'Name'),
+                TD::make('country', 'Country'),
+                TD::make('region', 'Region'),
+                TD::make('language', 'Language'),
+                TD::make('Actions')
+                    ->render(function (PeopleGroup $peopleGroup) {
+                        return Link::make('Edit')
+                            ->route('platform.people-group.edit', $peopleGroup->id);
+                    }),
+            ]),
+        ];
     }
 }

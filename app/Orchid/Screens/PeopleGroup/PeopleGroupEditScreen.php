@@ -84,23 +84,23 @@ class PeopleGroupEditScreen extends Screen
     {
         return [
             Layout::rows([
-                Input::make('people_group.name')
+                Input::make('peopleGroup.name')
                     ->title('Name')
                     ->placeholder('Maranao')
                     ->required(),
                 
-                Input::make('people_group.country')
+                Input::make('peopleGroup.country')
                     ->title('Country')
                     ->placeholder('PH')
                     ->help('Enter a two-letter country code.')
                     ->required(),
 
-                Input::make('people_group.region')
+                Input::make('peopleGroup.region')
                     ->title('Region')
                     ->placeholder('Marawi')
                     ->required(),
 
-                Input::make('people_group.language')
+                Input::make('peopleGroup.language')
                     ->title('Language')
                     ->placeholder('Filipino')
                     ->required(),
@@ -117,9 +117,9 @@ class PeopleGroupEditScreen extends Screen
      */
     public function createOrUpdate(PeopleGroup $peopleGroup, Request $request)
     {
-        $peopleGroup->create($request->get('people_group'));
+        $peopleGroup->fill($request->get('people_group'))->save();
         Toast::success('People group created');
-        return redirect()->route('platform.index');
+        return redirect()->route('platform.people-group');
     }
 
     /**
