@@ -29,15 +29,7 @@ class PeopleGroupListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'People Groups';
-    }
-
-    /**
-     * The description of the screen displayed in the header.
-     */
-    public function description(): ?string
-    {
-        return 'Browse people groups';
+        return 'People Group';
     }
 
     /**

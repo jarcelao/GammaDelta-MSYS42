@@ -42,16 +42,6 @@ class PeopleGroupEditScreen extends Screen
     }
 
     /**
-     * The description of the screen displayed in the header.
-     *
-     * @return string|null
-     */
-    public function description(): ?string
-    {
-        return 'Details such as name, country, region, and language.';
-    }
-
-    /**
      * The screen's action buttons
      *
      * @return Action[]
