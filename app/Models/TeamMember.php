@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Filters\Filterable;
+use Orchid\Screen\AsSource;
 
 class TeamMember extends Model
 {
+    use AsSource, Filterable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,7 +25,6 @@ class TeamMember extends Model
      * @var array
      */
     protected $allowedFilters = [
-        'id',
         'name',
     ];
 
@@ -31,7 +34,6 @@ class TeamMember extends Model
      * @var array
      */
     protected $allowedSorts = [
-        'id',
         'name',
     ];
 }
