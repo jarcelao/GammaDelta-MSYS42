@@ -2,12 +2,9 @@
 
 namespace App\Orchid\Screens\Team;
 
-use App\Models\TeamMember;
-use App\Orchid\Layouts\TeamMember\TeamMemberListLayout;
-use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
-class TeamListScreen extends Screen
+class TeamEditScreen extends Screen
 {
     /**
      * Fetch data to be displayed on the screen.
@@ -16,9 +13,7 @@ class TeamListScreen extends Screen
      */
     public function query(): iterable
     {
-        return [
-            'teamMembers' => TeamMember::filters()->paginate(),
-        ];
+        return [];
     }
 
     /**
@@ -28,7 +23,7 @@ class TeamListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Team';
+        return 'TeamCreateScreen';
     }
 
     /**
@@ -38,15 +33,7 @@ class TeamListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [
-            Link::make('Create Member')
-                ->icon('plus')
-                ->route('platform.team-member.edit'),
-            
-            Link::make('Create Team')
-                ->icon('plus')
-                ->route('platform.team.edit'),
-        ];
+        return [];
     }
 
     /**
@@ -56,8 +43,6 @@ class TeamListScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [
-            TeamMemberListLayout::class,
-        ];
+        return [];
     }
 }
