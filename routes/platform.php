@@ -10,7 +10,7 @@ use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
 use App\Orchid\Screens\PeopleGroup\PeopleGroupEditScreen;
 use App\Orchid\Screens\PeopleGroup\PeopleGroupListScreen;
-use App\Orchid\Screens\TeamMember\TeamMemberCreateScreen;
+use App\Orchid\Screens\TeamMember\TeamMemberEditScreen;
 use App\Orchid\Screens\Team\TeamListScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
@@ -100,9 +100,9 @@ Route::screen('team', TeamListScreen::class)
         ->parent('platform.index')
         ->push(__('Team'), route('platform.team')));
 
-// Platform > Team > Create Team Member
-Route::screen('team/create-member', TeamMemberCreateScreen::class)
-    ->name('platform.team-member.create')
+// Platform > Team > Edit Team Member
+Route::screen('team/member/{teamMember?}', TeamMemberEditScreen::class)
+    ->name('platform.team-member.edit')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.team')
-        ->push(__('Create Team Member'), route('platform.team-member.create')));
+        ->push(__('Manage Team Member'), route('platform.team-member.edit')));

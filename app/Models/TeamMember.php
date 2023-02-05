@@ -29,11 +29,10 @@ class TeamMember extends Model
     ];
 
     /**
-     * The attributes for which can use sort in url.
-     *
-     * @var array
+     * Get the team for the team member.
      */
-    protected $allowedSorts = [
-        'name',
-    ];
+    public function team()
+    {
+        return $this->belongsTo('App\Models\Team');
+    }
 }

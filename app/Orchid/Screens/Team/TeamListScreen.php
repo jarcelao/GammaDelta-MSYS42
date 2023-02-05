@@ -37,7 +37,7 @@ class TeamListScreen extends Screen
         return [
             Link::make('Create Member')
                 ->icon('plus')
-                ->route('platform.team-member.create'),
+                ->route('platform.team-member.edit'),
         ];
     }
 
