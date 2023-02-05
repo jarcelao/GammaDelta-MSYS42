@@ -18,7 +18,7 @@ class PeopleGroupListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'peopleGroups' => PeopleGroup::paginate(),
+            'peopleGroups' => PeopleGroup::filters()->paginate(),
         ];
     }
 
@@ -49,7 +49,7 @@ class PeopleGroupListScreen extends Screen
     {
         return [
             Link::make('Create')
-                ->icon('pencil')
+                ->icon('plus')
                 ->route('platform.people-group.edit'),
         ];
     }
@@ -63,17 +63,21 @@ class PeopleGroupListScreen extends Screen
     {
         return [
             Layout::table('peopleGroups', [
-                TD::make('name', 'Name'),
-                TD::make('country', 'Country'),
-                TD::make('region', 'Region'),
-                TD::make('language', 'Language'),
+                TD::make('name', 'Name')
+                    ->filter(),
+                TD::make('country', 'Country')
+                    ->filter(TD::FILTER_SELECT, PeopleGroup::pluck('country', 'country')->toArray()),
+                TD::make('region', 'Region')
+                    ->filter(TD::FILTER_SELECT, PeopleGroup::pluck('region', 'region')->toArray()),
+                TD::make('language', 'Language')
+                    ->filter(TD::FILTER_SELECT, PeopleGroup::pluck('language', 'language')->toArray()),
                 TD::make('')
                     ->render(function (PeopleGroup $peopleGroup) {
                         return Link::make('')
                             ->route('platform.people-group.edit', $peopleGroup->id)
                             ->icon('pencil');
                     }),
-            ]),
+        ]),
         ];
     }
 }
