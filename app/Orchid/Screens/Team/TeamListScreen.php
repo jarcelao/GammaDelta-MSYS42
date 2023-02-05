@@ -2,6 +2,8 @@
 
 namespace App\Orchid\Screens\Team;
 
+use App\Models\TeamMember;
+use App\Orchid\Layouts\TeamMember\TeamMemberListLayout;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
@@ -14,7 +16,9 @@ class TeamListScreen extends Screen
      */
     public function query(): iterable
     {
-        return [];
+        return [
+            'teamMembers' => TeamMember::filters()->paginate(),
+        ];
     }
 
     /**
@@ -48,6 +52,8 @@ class TeamListScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            TeamMemberListLayout::class,
+        ];
     }
 }
