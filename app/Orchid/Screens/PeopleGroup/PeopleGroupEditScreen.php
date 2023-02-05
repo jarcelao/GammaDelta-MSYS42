@@ -6,6 +6,7 @@ use App\Models\PeopleGroup;
 use Illuminate\Http\Request;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
@@ -68,7 +69,8 @@ class PeopleGroupEditScreen extends Screen
                 ->method('createOrUpdate')
                 ->canSee($this->peopleGroup->exists),
 
-            Button::make('Delete')
+            ModalToggle::make('Delete')
+                ->modal('confirmDelete')
                 ->icon('trash')
                 ->method('remove')
                 ->canSee($this->peopleGroup->exists),
@@ -105,6 +107,12 @@ class PeopleGroupEditScreen extends Screen
                     ->placeholder('Filipino')
                     ->required(),
             ]),
+
+            Layout::modal('confirmDelete', [
+                Layout::rows([]),
+            ])
+            ->title('Are you sure?')
+            ->applyButton('Delete'),
         ];
     }
 
