@@ -12,11 +12,6 @@ use Orchid\Screen\Screen;
 class TeamMemberCreateScreen extends Screen
 {
     /**
-     * @var TeamMember
-     */
-    public $teamMember;
-
-    /**
      * Fetch data to be displayed on the screen.
      *
      * @return array
