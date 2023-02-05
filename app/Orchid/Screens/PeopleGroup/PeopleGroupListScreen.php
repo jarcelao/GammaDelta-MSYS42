@@ -2,10 +2,9 @@
 
 namespace App\Orchid\Screens\PeopleGroup;
 
+use App\Orchid\Layouts\PeopleGroup\PeopleGroupListLayout;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
-use Orchid\Support\Facades\Layout;
-use Orchid\Screen\TD;
 use App\Models\PeopleGroup;
 
 class PeopleGroupListScreen extends Screen
@@ -54,22 +53,7 @@ class PeopleGroupListScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::table('peopleGroups', [
-                TD::make('name', 'Name')
-                    ->filter(),
-                TD::make('country', 'Country')
-                    ->filter(TD::FILTER_SELECT, PeopleGroup::pluck('country', 'country')->toArray()),
-                TD::make('region', 'Region')
-                    ->filter(TD::FILTER_SELECT, PeopleGroup::pluck('region', 'region')->toArray()),
-                TD::make('language', 'Language')
-                    ->filter(TD::FILTER_SELECT, PeopleGroup::pluck('language', 'language')->toArray()),
-                TD::make('')
-                    ->render(function (PeopleGroup $peopleGroup) {
-                        return Link::make('')
-                            ->route('platform.people-group.edit', $peopleGroup->id)
-                            ->icon('pencil');
-                    }),
-        ]),
+            PeopleGroupListLayout::class,
         ];
     }
 }
