@@ -28,8 +28,12 @@ class PlatformProvider extends OrchidServiceProvider
     {
         return [
             Menu::make('People Group')
-                ->icon('user')
+                ->icon('globe')
                 ->route('platform.people-group'),
+
+            Menu::make('Team')
+                ->icon('friends')
+                ->route('platform.team'),
 
             Menu::make(__('Users'))
                 ->icon('user')
