@@ -47,10 +47,7 @@ class CommunityManageScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Button::make('Delete')
-                ->icon('trash')
-                ->method('delete')
-                ->confirm('This will delete all associated data (e.g. Program, Project)'),
+            
         ];
     }
 
@@ -83,19 +80,6 @@ class CommunityManageScreen extends Screen
     {
         $community->fill($request->get('community'))->save();
         Toast::success('Community updated');
-        return redirect()->route('platform.community');
-    }
-
-    /**
-     * Handle the form submission.
-     *
-     * @param Community $community
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function delete(Community $community)
-    {
-        $community->delete();
-        Toast::success('Community deleted');
         return redirect()->route('platform.community');
     }
 }
