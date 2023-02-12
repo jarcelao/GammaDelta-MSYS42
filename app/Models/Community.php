@@ -31,4 +31,14 @@ class Community extends Model
         'region',
         'language',
     ];
+
+    /**
+     * The attributes that can be sorted.
+     */
+    protected $allowedSorts = [
+        'name',
+        'country',
+        'region',
+        'language',
+    ];
 }

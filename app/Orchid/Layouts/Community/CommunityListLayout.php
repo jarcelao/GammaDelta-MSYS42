@@ -28,13 +28,16 @@ class CommunityListLayout extends Table
     {
         return [
             TD::make('name', 'Name')
-                    ->filter(),
+                ->filter(),
             TD::make('country', 'Country')
-                ->filter(TD::FILTER_SELECT, Community::pluck('country', 'country')->toArray()),
+                ->filter(TD::FILTER_SELECT, Community::pluck('country', 'country')->toArray())
+                ->sort(),
             TD::make('region', 'Region')
-                ->filter(TD::FILTER_SELECT, Community::pluck('region', 'region')->toArray()),
+                ->filter(TD::FILTER_SELECT, Community::pluck('region', 'region')->toArray())
+                ->sort(),
             TD::make('language', 'Language')
-                ->filter(TD::FILTER_SELECT, Community::pluck('language', 'language')->toArray()),
+                ->filter(TD::FILTER_SELECT, Community::pluck('language', 'language')->toArray())
+                ->sort(),
             TD::make('')
                 ->render(function (Community $community) {
                     return Link::make('')
