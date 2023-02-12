@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Orchid\Screens\PeopleGroup;
+namespace App\Orchid\Screens\Community;
 
-use App\Models\PeopleGroup;
+use App\Models\Community;
 use Illuminate\Http\Request;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
@@ -12,22 +12,22 @@ use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
-class PeopleGroupEditScreen extends Screen
+class CommunityEditScreen extends Screen
 {
     /**
-     * @var PeopleGroup
+     * @var Community
      */
-    public $peopleGroup;
+    public $community;
 
     /**
      * Fetch data to be displayed on the screen.
      * 
      * @return array
      */
-    public function query(PeopleGroup $peopleGroup): iterable
+    public function query(Community $community): iterable
     {
         return [
-            'peopleGroup' => $peopleGroup,
+            'community' => $community,
         ];
     }
 
@@ -38,7 +38,7 @@ class PeopleGroupEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->peopleGroup->exists ? 'Edit People Group' : 'Create People Group';
+        return $this->community->exists ? 'Edit Community' : 'Create Community';
     }
 
     /**
@@ -52,18 +52,18 @@ class PeopleGroupEditScreen extends Screen
             Button::make('Save')
                 ->icon('check')
                 ->method('createOrUpdate')
-                ->canSee(!$this->peopleGroup->exists),
+                ->canSee(!$this->community->exists),
 
             Button::make('Update')
                 ->icon('check')
                 ->method('createOrUpdate')
-                ->canSee($this->peopleGroup->exists),
+                ->canSee($this->community->exists),
 
             ModalToggle::make('Delete')
                 ->modal('confirmDelete')
                 ->icon('trash')
                 ->method('remove')
-                ->canSee($this->peopleGroup->exists),
+                ->canSee($this->community->exists),
         ];
     }
 
@@ -76,23 +76,23 @@ class PeopleGroupEditScreen extends Screen
     {
         return [
             Layout::rows([
-                Input::make('peopleGroup.name')
+                Input::make('community.name')
                     ->title('Name')
                     ->placeholder('Maranao')
                     ->required(),
                 
-                Input::make('peopleGroup.country')
+                Input::make('community.country')
                     ->title('Country')
                     ->placeholder('PH')
                     ->help('Enter a two-letter country code.')
                     ->required(),
 
-                Input::make('peopleGroup.region')
+                Input::make('community.region')
                     ->title('Region')
                     ->placeholder('Marawi')
                     ->required(),
 
-                Input::make('peopleGroup.language')
+                Input::make('community.language')
                     ->title('Language')
                     ->placeholder('Filipino')
                     ->required(),
@@ -109,34 +109,34 @@ class PeopleGroupEditScreen extends Screen
     /**
      * Handle the form submission.
      *
-     * @param PeopleGroup $peopleGroup
+     * @param Community $community
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createOrUpdate(PeopleGroup $peopleGroup, Request $request)
+    public function createOrUpdate(Community $community, Request $request)
     {
-        if ($peopleGroup->exists) {
-            $peopleGroup->fill($request->get('peopleGroup'))->save();
-            Toast::success('People group updated');
-            return redirect()->route('platform.people-group.edit', $peopleGroup);
+        if ($community->exists) {
+            $community->fill($request->get('community'))->save();
+            Toast::success('Community updated');
+            return redirect()->route('platform.community.edit', $community);
         }
 
-        $peopleGroup->fill($request->get('peopleGroup'))->save();
-        Toast::success('People group created');
-        return redirect()->route('platform.people-group');
+        $community->fill($request->get('community'))->save();
+        Toast::success('Community created');
+        return redirect()->route('platform.community');
     }
 
     /**
      * Handle the form submission.
      *
-     * @param PeopleGroup $peopleGroup
+     * @param Community $community
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function remove(PeopleGroup $peopleGroup)
+    public function remove(Community $community)
     {
-        $peopleGroup->delete();
-        Toast::success('People group deleted');
-        return redirect()->route('platform.people-group');
+        $community->delete();
+        Toast::success('Community deleted');
+        return redirect()->route('platform.community');
     }
 }

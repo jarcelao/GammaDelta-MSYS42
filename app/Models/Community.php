@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
-class PeopleGroup extends Model
+class Community extends Model
 {
     use AsSource, Filterable;
 

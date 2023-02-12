@@ -8,11 +8,8 @@ use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
-use App\Orchid\Screens\PeopleGroup\PeopleGroupEditScreen;
-use App\Orchid\Screens\PeopleGroup\PeopleGroupListScreen;
-use App\Orchid\Screens\TeamMember\TeamMemberEditScreen;
-use App\Orchid\Screens\Team\TeamListScreen;
-use App\Orchid\Screens\Team\TeamEditScreen;
+use App\Orchid\Screens\Community\CommunityEditScreen;
+use App\Orchid\Screens\Community\CommunityListScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -80,37 +77,16 @@ Route::screen('roles', RoleListScreen::class)
         ->parent('platform.index')
         ->push(__('Roles'), route('platform.systems.roles')));
 
-// Platform > People Group
-Route::screen('people-groups', PeopleGroupListScreen::class)
-    ->name('platform.people-group')
+// Platform > Community
+Route::screen('communities', CommunityListScreen::class)
+    ->name('platform.community')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('People Group'), route('platform.people-group')));
+        ->push(__('Community'), route('platform.community')));
 
-// Platform > People Group > Edit
-Route::screen('people-group/{peopleGroup?}', PeopleGroupEditScreen::class)
-    ->name('platform.people-group.edit')
+// Platform > Community > Edit
+Route::screen('communities/manage/{community?}', CommunityEditScreen::class)
+    ->name('platform.community.edit')
     ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.people-group')
-        ->push(__('Manage'), route('platform.people-group.edit')));
-
-// Platform > Team
-Route::screen('team', TeamListScreen::class)
-    ->name('platform.team')
-    ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.index')
-        ->push(__('Team'), route('platform.team')));
-
-// Platform > Team > Edit
-Route::screen('team/manage/{team?}', TeamEditScreen::class)
-    ->name('platform.team.edit')
-    ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.team')
-        ->push(__('Manage Team'), route('platform.team.edit')));
-
-// Platform > Team > Edit Team Member
-Route::screen('team/member/{teamMember?}', TeamMemberEditScreen::class)
-    ->name('platform.team-member.edit')
-    ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.team')
-        ->push(__('Manage Team Member'), route('platform.team-member.edit')));
+        ->parent('platform.community')
+        ->push(__('Manage'), route('platform.community.edit')));

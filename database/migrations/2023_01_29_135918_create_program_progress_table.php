@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('program_progress', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('program_id')->constrained('programs')->onDelete('cascade');
+            $table->foreignId('program_id')->constrained('programs');
             $table->text('writeup')->nullable();
             $table->string('status');
         });

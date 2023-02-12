@@ -27,13 +27,9 @@ class PlatformProvider extends OrchidServiceProvider
     public function registerMainMenu(): array
     {
         return [
-            Menu::make('People Group')
+            Menu::make('Communities')
                 ->icon('globe')
-                ->route('platform.people-group'),
-
-            Menu::make('Team')
-                ->icon('friends')
-                ->route('platform.team'),
+                ->route('platform.community'),
 
             Menu::make(__('Users'))
                 ->icon('user')

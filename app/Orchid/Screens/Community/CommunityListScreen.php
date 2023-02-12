@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Orchid\Screens\Team;
+namespace App\Orchid\Screens\Community;
 
+use App\Orchid\Layouts\Community\CommunityListLayout;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use App\Models\Community;
 
-class TeamEditScreen extends Screen
+class CommunityListScreen extends Screen
 {
     /**
      * Fetch data to be displayed on the screen.
@@ -13,7 +16,9 @@ class TeamEditScreen extends Screen
      */
     public function query(): iterable
     {
-        return [];
+        return [
+            'communities' => Community::filters()->paginate(),
+        ];
     }
 
     /**
@@ -23,7 +28,7 @@ class TeamEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'TeamCreateScreen';
+        return 'Community Dashboard';
     }
 
     /**
@@ -33,7 +38,11 @@ class TeamEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make('Create')
+                ->icon('plus')
+                ->route('platform.community.edit'),
+        ];
     }
 
     /**
@@ -43,6 +52,8 @@ class TeamEditScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            CommunityListLayout::class,
+        ];
     }
 }
