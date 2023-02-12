@@ -38,12 +38,6 @@ class CommunityListLayout extends Table
             TD::make('language', 'Language')
                 ->filter(TD::FILTER_SELECT, Community::pluck('language', 'language')->toArray())
                 ->sort(),
-            TD::make('')
-                ->render(function (Community $community) {
-                    return Link::make('')
-                        ->route('platform.community.edit', $community->id)
-                        ->icon('pencil');
-                }),
         ];
     }
 }

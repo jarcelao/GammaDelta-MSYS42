@@ -8,8 +8,8 @@ use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
-use App\Orchid\Screens\Community\CommunityEditScreen;
 use App\Orchid\Screens\Community\CommunityListScreen;
+use App\Orchid\Screens\Community\CommunityCreateScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -84,9 +84,9 @@ Route::screen('communities', CommunityListScreen::class)
         ->parent('platform.index')
         ->push(__('Community'), route('platform.community')));
 
-// Platform > Community > Edit
-Route::screen('communities/manage/{community?}', CommunityEditScreen::class)
-    ->name('platform.community.edit')
+// Platform > Community > Create
+Route::screen('communities/create', CommunityCreateScreen::class)
+    ->name('platform.community.create')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.community')
-        ->push(__('Manage'), route('platform.community.edit')));
+        ->push(__('Create'), route('platform.community.create')));

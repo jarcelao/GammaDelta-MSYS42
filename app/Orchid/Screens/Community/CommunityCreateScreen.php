@@ -6,29 +6,19 @@ use App\Models\Community;
 use Illuminate\Http\Request;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
-class CommunityEditScreen extends Screen
+class CommunityCreateScreen extends Screen
 {
     /**
-     * @var Community
+     * Query data.
      */
-    public $community;
-
-    /**
-     * Fetch data to be displayed on the screen.
-     * 
-     * @return array
-     */
-    public function query(Community $community): iterable
+    public function query(): array
     {
-        return [
-            'community' => $community,
-        ];
+        return [];
     }
 
     /**
@@ -38,7 +28,7 @@ class CommunityEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->community->exists ? 'Edit Community' : 'Create Community';
+        return 'Create Community';
     }
 
     /**
@@ -51,19 +41,7 @@ class CommunityEditScreen extends Screen
         return [
             Button::make('Save')
                 ->icon('check')
-                ->method('createOrUpdate')
-                ->canSee(!$this->community->exists),
-
-            Button::make('Update')
-                ->icon('check')
-                ->method('createOrUpdate')
-                ->canSee($this->community->exists),
-
-            ModalToggle::make('Delete')
-                ->modal('confirmDelete')
-                ->icon('trash')
-                ->method('remove')
-                ->canSee($this->community->exists),
+                ->method('create'),
         ];
     }
 
@@ -97,12 +75,6 @@ class CommunityEditScreen extends Screen
                     ->placeholder('Filipino')
                     ->required(),
             ]),
-
-            Layout::modal('confirmDelete', [
-                Layout::rows([]),
-            ])
-            ->title('Are you sure?')
-            ->applyButton('Delete'),
         ];
     }
 
@@ -113,30 +85,10 @@ class CommunityEditScreen extends Screen
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createOrUpdate(Community $community, Request $request)
+    public function create(Community $community, Request $request)
     {
-        if ($community->exists) {
-            $community->fill($request->get('community'))->save();
-            Toast::success('Community updated');
-            return redirect()->route('platform.community.edit', $community);
-        }
-
         $community->fill($request->get('community'))->save();
         Toast::success('Community created');
-        return redirect()->route('platform.community');
-    }
-
-    /**
-     * Handle the form submission.
-     *
-     * @param Community $community
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function remove(Community $community)
-    {
-        $community->delete();
-        Toast::success('Community deleted');
         return redirect()->route('platform.community');
     }
 }

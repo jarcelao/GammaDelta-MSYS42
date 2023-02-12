@@ -41,7 +41,7 @@ class CommunityListScreen extends Screen
         return [
             Link::make('Create')
                 ->icon('plus')
-                ->route('platform.community.edit'),
+                ->route('platform.community.create'),
         ];
     }
 
