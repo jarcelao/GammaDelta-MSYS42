@@ -41,4 +41,20 @@ class Community extends Model
         'region',
         'language',
     ];
+
+    /**
+     * Get the program for the community.
+     */
+    public function program()
+    {
+        return $this->hasOne('App\Models\Program');
+    }
+
+    /**
+     * Get the project for the community.
+     */
+    public function project()
+    {
+        return $this->hasOne('App\Models\Project');
+    }
 }
