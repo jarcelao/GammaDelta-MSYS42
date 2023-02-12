@@ -28,7 +28,9 @@ class CommunityListLayout extends Table
     {
         return [
             TD::make('name', 'Name')
-                ->filter(),
+                ->filter()
+                ->render(fn (Community $community) => Link::make($community->name)
+                    ->route('platform.community.manage', $community->id)),
             TD::make('country', 'Country')
                 ->filter(TD::FILTER_SELECT, Community::pluck('country', 'country')->toArray())
                 ->sort(),

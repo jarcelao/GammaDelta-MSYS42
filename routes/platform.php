@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Orchid\Screens\PlatformScreen;
+// use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -10,6 +10,7 @@ use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
 use App\Orchid\Screens\Community\CommunityListScreen;
 use App\Orchid\Screens\Community\CommunityCreateScreen;
+use App\Orchid\Screens\Community\CommunityManageScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -90,3 +91,10 @@ Route::screen('communities/create', CommunityCreateScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.community')
         ->push(__('Create'), route('platform.community.create')));
+
+// Platform > Community > Manage
+Route::screen('communities/{community}/manage', CommunityManageScreen::class)
+    ->name('platform.community.manage')
+    ->breadcrumbs(fn (Trail $trail, $community) => $trail
+        ->parent('platform.community')
+        ->push(__('Manage'), route('platform.community.manage', $community)));

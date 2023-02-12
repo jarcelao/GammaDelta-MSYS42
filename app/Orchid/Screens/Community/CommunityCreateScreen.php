@@ -3,12 +3,11 @@
 namespace App\Orchid\Screens\Community;
 
 use App\Models\Community;
+use App\Orchid\Layouts\Community\CommunityEditLayout;
 use Illuminate\Http\Request;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
-use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
 class CommunityCreateScreen extends Screen
@@ -53,28 +52,7 @@ class CommunityCreateScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::rows([
-                Input::make('community.name')
-                    ->title('Name')
-                    ->placeholder('Maranao')
-                    ->required(),
-                
-                Input::make('community.country')
-                    ->title('Country')
-                    ->placeholder('PH')
-                    ->help('Enter a two-letter country code.')
-                    ->required(),
-
-                Input::make('community.region')
-                    ->title('Region')
-                    ->placeholder('Marawi')
-                    ->required(),
-
-                Input::make('community.language')
-                    ->title('Language')
-                    ->placeholder('Filipino')
-                    ->required(),
-            ]),
+            CommunityEditLayout::class,
         ];
     }
 
