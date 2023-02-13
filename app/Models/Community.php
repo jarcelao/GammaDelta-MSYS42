@@ -43,6 +43,14 @@ class Community extends Model
     ];
 
     /**
+     * Get the team for the community.
+     */
+    public function team()
+    {
+        return $this->hasOne('App\Models\Team');
+    }
+
+    /**
      * Get the program for the community.
      */
     public function program()
