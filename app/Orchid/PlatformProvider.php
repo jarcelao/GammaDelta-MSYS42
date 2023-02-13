@@ -31,6 +31,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('globe')
                 ->route('platform.community'),
 
+            Menu::make('Teams')
+                ->icon('people')
+                ->route('platform.team'),
+
             Menu::make(__('Users'))
                 ->icon('user')
                 ->route('platform.systems.users')
