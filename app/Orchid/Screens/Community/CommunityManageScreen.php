@@ -6,6 +6,7 @@ use App\Models\Community;
 use App\Orchid\Layouts\Community\CommunityEditLayout;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
@@ -56,15 +57,36 @@ class CommunityManageScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [
-            Layout::block(CommunityEditLayout::class)
-                ->title('Community Details')
-                ->commands(
-                    Button::make('Save')
-                        ->icon('check')
-                        ->method('saveDetails')
-                ),
-        ];
+        $layout = [];
+
+        $layout[] = Layout::block(CommunityEditLayout::class)
+        ->title('Community Details')
+        ->commands(
+            Button::make('Save')
+                ->icon('check')
+                ->method('saveDetails')
+        );
+
+        if ($this->community->team) {
+            $layout[] = Layout::block(Layout::view('team.viewteam'))
+            ->title('Community Team')
+            ->commands(
+                Link::make('Edit Team')
+                    ->icon('pencil')
+                    ->route('platform.team.manage', $this->community)
+            );
+        } 
+        else {
+            $layout[] = Layout::block(Layout::view('team.viewteam'))
+            ->title('Community Team')
+            ->commands(
+                Link::make('Create Team')
+                    ->icon('pencil')
+                    ->route('platform.team.manage')
+            );
+        }
+
+        return $layout;
     }
 
     /**
