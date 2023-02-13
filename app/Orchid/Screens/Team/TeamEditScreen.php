@@ -2,18 +2,35 @@
 
 namespace App\Orchid\Screens\Team;
 
+use App\Models\Team;
+use App\Models\TeamMember;
+use App\Orchid\Layouts\Team\TeamEditLayout;
+use Illuminate\Http\Request;
+use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
 
 class TeamEditScreen extends Screen
 {
+    /**
+     * @var Team
+     */
+    public $team;
+
     /**
      * Fetch data to be displayed on the screen.
      *
      * @return array
      */
-    public function query(): iterable
+    public function query(Team $team): iterable
     {
-        return [];
+        return [
+            'team' => $team,
+            'team_members' => $team->teamMembers()->get(),
+        ];
     }
 
     /**
@@ -23,7 +40,7 @@ class TeamEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'TeamEditScreen';
+        return $this->team->exists ? 'Edit Team' : 'Create Team';
     }
 
     /**
@@ -33,7 +50,15 @@ class TeamEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            ModalToggle::make('New Member')
+                ->modal('newMember')
+                ->icon('plus')
+                ->method('createMember'),
+            Button::make('Save')
+                ->icon('check')
+                ->method('createOrUpdate'),
+        ];
     }
 
     /**
@@ -43,6 +68,51 @@ class TeamEditScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            TeamEditLayout::class,
+            Layout::modal('newMember', [
+                Layout::rows([
+                    Input::make('team_member.name')
+                        ->title('Name')
+                        ->placeholder('LAST, Given M.I.')
+                        ->required(),
+                ])
+            ])
+                ->title('New Team Member')
+        ];
+    }
+
+    /**
+     * Handle the creation of a new team member.
+     * 
+     * @param TeamMember $teamMember
+     * @param Request $request
+     */
+    public function createMember(Request $request)
+    {
+        TeamMember::create($request->get('team_member'));
+        Toast::info('Team member created.');
+    }
+
+    /**
+     * Handle the creation of a new team.
+     * 
+     * @param Team $team
+     * @param Request $request
+     */
+    public function createOrUpdate(Team $team, Request $request)
+    {
+        $team->fill($request->get('team'));
+        $team->user_id = $request->user()->id;
+
+        foreach ($request->get('team_members') as $teamMember) {
+            $team->teamMembers()->save(TeamMember::where('id', $teamMember)->first());
+        }
+
+        $team->save();
+
+        Toast::info('Team saved.');
+        
+        return redirect()->route('platform.team');
     }
 }

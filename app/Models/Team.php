@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Community;
+use App\Models\TeamMember;
 use Illuminate\Database\Eloquent\Model;
 use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
@@ -17,6 +19,7 @@ class Team extends Model
      */
     protected $fillable = [
         'team_leader',
+        'community_id',
     ];
 
     /**
@@ -37,13 +40,13 @@ class Team extends Model
      * Get the community that owns the team.
      */
     public function community() {
-        return $this->belongsTo('App\Models\Community');
+        return $this->belongsTo(Community::class);
     }
 
     /**
      * Get the team members for the team.
      */
     public function teamMembers() {
-        return $this->hasMany('App\Models\TeamMember');
+        return $this->hasMany(TeamMember::class);
     }
 }

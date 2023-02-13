@@ -14,6 +14,7 @@ use App\Orchid\Screens\Community\CommunityManageScreen;
 use App\Orchid\Screens\Team\TeamListScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
+use App\Orchid\Screens\Team\TeamEditScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,7 +95,7 @@ Route::screen('communities/create', CommunityCreateScreen::class)
         ->push(__('Create'), route('platform.community.create')));
 
 // Platform > Community > Manage
-Route::screen('communities/{community}/manage', CommunityManageScreen::class)
+Route::screen('communities/manage/{community}', CommunityManageScreen::class)
     ->name('platform.community.manage')
     ->breadcrumbs(fn (Trail $trail, $community) => $trail
         ->parent('platform.community')
@@ -106,3 +107,10 @@ Route::screen('teams', TeamListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Team'), route('platform.team')));
+
+// Platform > Team > Manage
+Route::screen('teams/manage/{team?}', TeamEditScreen::class)
+    ->name('platform.team.manage')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.team')
+        ->push(__('Manage'), route('platform.team.manage')));

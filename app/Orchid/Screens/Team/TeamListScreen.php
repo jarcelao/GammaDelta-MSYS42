@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Team;
 
 use App\Models\Team;
 use App\Orchid\Layouts\Team\TeamListLayout;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
 class TeamListScreen extends Screen
@@ -37,7 +38,11 @@ class TeamListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make('Create')
+                ->icon('plus')
+                ->route('platform.team.manage'),
+        ];
     }
 
     /**

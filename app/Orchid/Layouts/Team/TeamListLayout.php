@@ -2,6 +2,8 @@
 
 namespace App\Orchid\Layouts\Team;
 
+use App\Models\Team;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 
@@ -30,7 +32,17 @@ class TeamListLayout extends Table
                 ->sort(),
             TD::make('community.name', 'Community')
                 ->filter()
-                ->sort(),
+                ->sort()
+                ->render(function (Team $team) {
+                    return Link::make($team->community->name)
+                        ->route('platform.community.manage', $team->community->id);
+                }),
+            TD::make('')
+                ->render(function (Team $team) {
+                    return Link::make('')
+                        ->route('platform.team.manage', $team->id)
+                        ->icon('pencil');
+                }),
         ];
     }
 }

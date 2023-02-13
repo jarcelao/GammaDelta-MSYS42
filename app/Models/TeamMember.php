@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 class TeamMember extends Model
 {
-    use AsSource, Filterable;
+    use AsSource;
 
     /**
      * The attributes that are mass assignable.
@@ -16,15 +15,6 @@ class TeamMember extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-    ];
-
-    /**
-     * The attributes for which you can use filters in url.
-     *
-     * @var array
-     */
-    protected $allowedFilters = [
         'name',
     ];
 
