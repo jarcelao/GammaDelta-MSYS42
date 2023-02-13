@@ -73,7 +73,7 @@ class CommunityManageScreen extends Screen
             ->commands(
                 Link::make('Edit Team')
                     ->icon('pencil')
-                    ->route('platform.team.manage', $this->community)
+                    ->route('platform.team.manage', $this->community->id)
             );
         } 
         else {
