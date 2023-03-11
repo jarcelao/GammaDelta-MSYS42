@@ -68,7 +68,13 @@ class CommunityManageScreen extends Screen
             ),
 
             Layout::block(Layout::legend('community', [
-                Sight::make('team.teamLeader.name', 'Team Leader'),   
+                Sight::make('team.teamLeader.name', 'Team Leader'),
+                Sight::make('', 'Team Members')
+                    ->render(function () {
+                        return $this->community->team->teamMembers->map(function ($member) {
+                            return $member->name;
+                        })->implode('\n');
+                    })
             ]))
                 ->title('Team Details')
                 ->commands(
