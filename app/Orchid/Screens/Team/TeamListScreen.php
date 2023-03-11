@@ -17,7 +17,7 @@ class TeamListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'teams' => Team::filters()->paginate(),
+            'teams' => Team::paginate(),
         ];
     }
 

@@ -27,9 +27,12 @@ class TeamListLayout extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('team_leader', 'Team Leader')
+            TD::make('team_leader_id', 'Team Leader')
                 ->filter()
-                ->sort(),
+                ->sort()
+                ->render(function (Team $team) {
+                    return e($team->teamLeader->name);
+                }),
             TD::make('community.name', 'Community')
                 ->filter()
                 ->sort()

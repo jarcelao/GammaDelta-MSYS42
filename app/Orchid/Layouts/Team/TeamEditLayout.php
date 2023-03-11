@@ -5,7 +5,6 @@ namespace App\Orchid\Layouts\Team;
 use App\Models\Community;
 use App\Models\TeamMember;
 use Orchid\Screen\Field;
-use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Layouts\Rows;
 
@@ -26,9 +25,9 @@ class TeamEditLayout extends Rows
     protected function fields(): iterable
     {
         return [
-            Input::make('team.team_leader')
+            Relation::make('team.team_leader_id')
                 ->title('Team Leader')
-                ->placeholder('LAST, Given M.I.')
+                ->fromModel(TeamMember::class, 'name')
                 ->required(),
 
             Relation::make('team.community_id')

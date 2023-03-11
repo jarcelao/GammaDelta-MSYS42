@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('community_id')->constrained();
+        Schema::table('teams', function (Blueprint $table) {
+            $table->foreignId('team_leader_id')->constrained('team_members');
         });
     }
 
@@ -28,6 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropForeign(['team_leader_id']);
+            $table->dropColumn('team_leader_id');
+        });
     }
 };

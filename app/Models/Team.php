@@ -5,12 +5,11 @@ namespace App\Models;
 use App\Models\Community;
 use App\Models\TeamMember;
 use Illuminate\Database\Eloquent\Model;
-use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 class Team extends Model
 {
-    use AsSource, Filterable;
+    use AsSource;
 
     /**
      * The attributes that are mass assignable.
@@ -18,23 +17,16 @@ class Team extends Model
      * @var array
      */
     protected $fillable = [
-        'team_leader',
+        'team_leader_id',
         'community_id',
     ];
 
     /**
-     * The attributes that can be filtered.
+     * Get the team leader for the team.
      */
-    public $allowedFilters = [
-        'team_leader',
-    ];
-
-    /**
-     * The attributes that can be sorted.
-     */
-    public $allowedSorts = [
-        'team_leader',
-    ];
+    public function teamLeader() {
+        return $this->belongsTo(TeamMember::class, 'team_leader_id');
+    }
 
     /**
      * Get the community that owns the team.

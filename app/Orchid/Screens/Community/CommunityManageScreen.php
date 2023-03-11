@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Orchid\Screen\Sight;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -57,36 +58,25 @@ class CommunityManageScreen extends Screen
      */
     public function layout(): iterable
     {
-        $layout = [];
-
-        $layout[] = Layout::block(CommunityEditLayout::class)
-        ->title('Community Details')
-        ->commands(
-            Button::make('Save')
-                ->icon('check')
-                ->method('saveDetails')
-        );
-
-        if ($this->community->team) {
-            $layout[] = Layout::block(Layout::view('team.viewteam'))
-            ->title('Community Team')
+        return [
+            Layout::block(CommunityEditLayout::class)
+            ->title('Community Details')
             ->commands(
-                Link::make('Edit Team')
-                    ->icon('pencil')
-                    ->route('platform.team.manage', $this->community->team->id)
-            );
-        } 
-        else {
-            $layout[] = Layout::block(Layout::view('team.viewteam'))
-            ->title('Community Team')
-            ->commands(
-                Link::make('Create Team')
-                    ->icon('pencil')
-                    ->route('platform.team.manage')
-            );
-        }
+                Button::make('Save')
+                    ->icon('check')
+                    ->method('saveDetails')
+            ),
 
-        return $layout;
+            Layout::block(Layout::legend('community', [
+                Sight::make('team.teamLeader.name', 'Team Leader'),   
+            ]))
+                ->title('Team Details')
+                ->commands(
+                    Link::make('Manage Team')
+                        ->route('platform.team.manage', $this->community->team->id)
+                        ->icon('pencil')
+                )
+        ];
     }
 
     /**
