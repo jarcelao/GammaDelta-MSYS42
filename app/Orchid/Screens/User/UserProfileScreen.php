@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Screen;
+use Orchid\Screen\Sight;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
@@ -66,7 +67,13 @@ class UserProfileScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block(Layout::view('user.viewuser'))
+            Layout::block(
+                Layout::legend('user', [
+                    Sight::make('name'),
+                    Sight::make('email'),
+                    Sight::make('contact_number', 'Contact Number'),
+                ])
+            )
                 ->title(__('Profile Information'))
                 ->description(__("Request your administrator to update your account details.")),
 
