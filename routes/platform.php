@@ -15,6 +15,7 @@ use App\Orchid\Screens\Team\TeamListScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Team\TeamEditScreen;
+use App\Orchid\Screens\Program\ProgramEditScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,3 +115,10 @@ Route::screen('teams/manage/{team?}', TeamEditScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.team')
         ->push(__('Manage'), route('platform.team.manage')));
+
+// Platform > Manage Program
+Route::screen('programs/manage/{program?}', ProgramEditScreen::class)
+    ->name('platform.program.manage')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Manage'), route('platform.program.manage')));

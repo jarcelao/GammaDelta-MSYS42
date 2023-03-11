@@ -12,8 +12,7 @@ class Program extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'group_id',
+        'community_id',
         'title',
         'purpose',
         'indicators',
@@ -29,19 +28,11 @@ class Program extends Model
     ];
 
     /**
-     * Get the user that owns the program.
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * Get the group assigned to the program.
      */
-    public function group()
+    public function community()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(Community::class);
     }
 
     /**

@@ -71,17 +71,33 @@ class CommunityManageScreen extends Screen
                 Sight::make('team.teamLeader.name', 'Team Leader'),
                 Sight::make('', 'Team Members')
                     ->render(function () {
-                        return $this->community->team->teamMembers->map(function ($member) {
-                            return $member->name;
-                        })->implode('\n');
+                        if ($this->community->team) {
+                            return $this->community->team->teamMembers->map(function ($member) {
+                                return $member->name;
+                            })->implode('\n');
+                        }
+                        
+                        return '';
                     })
             ]))
                 ->title('Team Details')
                 ->commands(
                     Link::make('Manage Team')
-                        ->route('platform.team.manage', $this->community->team->id)
+                        ->route('platform.team.manage', ($this->community->team) ? $this->community->team->id : null)
                         ->icon('pencil')
-                )
+                ),
+                
+            Layout::block(Layout::legend('community', [
+                Sight::make('program.title', 'Program Title'),
+                Sight::make('program.status', 'Program Status'),
+            ]))
+                ->title('Program Details')
+                ->commands(
+                    Link::make('Manage Program')
+                        ->route('platform.program.manage', ($this->community->program) ? $this->community->program->id : null)
+                        ->icon('pencil')
+                ),
+
         ];
     }
 

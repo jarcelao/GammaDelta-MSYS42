@@ -103,7 +103,6 @@ class TeamEditScreen extends Screen
     public function createOrUpdate(Team $team, Request $request)
     {
         $team->fill($request->get('team'));
-        $team->user_id = $request->user()->id;
 
         foreach ($request->get('team_members') as $teamMember) {
             $team->teamMembers()->save(TeamMember::where('id', $teamMember)->first());
@@ -113,6 +112,6 @@ class TeamEditScreen extends Screen
 
         Toast::info('Team saved.');
         
-        return redirect()->route('platform.team');
+        return redirect()->route('platform.community.manage', $team->community);
     }
 }

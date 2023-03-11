@@ -12,8 +12,6 @@ class Project extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'group_id',
         'title',
         'purpose',
         'indicators',
@@ -27,19 +25,11 @@ class Project extends Model
     ];
 
     /**
-     * Get the user that owns the project.
+     * Get the community assigned to the project.
      */
-    public function user()
+    public function community()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the group assigned to the project.
-     */
-    public function group()
-    {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(Community::class);
     }
 
     /**
