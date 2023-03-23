@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Community;
 
 use App\Orchid\Layouts\Community\CommunityListLayout;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use App\Models\Community;
@@ -16,9 +17,19 @@ class CommunityListScreen extends Screen
      */
     public function query(): iterable
     {
-        return [
-            'communities' => Community::filters()->paginate(),
-        ];
+        if (Auth::user()->hasAccess('platform.community.approve')) {
+            return [
+                'communities' => Community::filters()->paginate(),
+            ];
+        }
+
+        if (Auth::user()->hasAccess('platform.community')) {
+            return [
+                'communities' => Community::where('user_id', auth()->user()->id)->filters()->paginate(),
+            ];
+        }
+
+        return [];
     }
 
     /**
@@ -38,11 +49,15 @@ class CommunityListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [
-            Link::make('Create')
-                ->icon('plus')
-                ->route('platform.community.create'),
-        ];
+        if (Auth::user()->hasAccess('platform.community')) {
+            return [
+                Link::make('Create')
+                    ->icon('plus')
+                    ->route('platform.community.create'),
+            ];
+        }
+
+        return [];
     }
 
     /**

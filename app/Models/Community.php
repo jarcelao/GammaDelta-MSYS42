@@ -43,6 +43,14 @@ class Community extends Model
     ];
 
     /**
+     * Get the user for the community.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    /**
      * Get the team for the community.
      */
     public function team()
@@ -64,5 +72,16 @@ class Community extends Model
     public function project()
     {
         return $this->hasOne('App\Models\Project');
+    }
+
+    /**
+     * Scope a query to only include communities of a given user.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Models\User $user
+     */
+    public function scopeOfUser($query, $user)
+    {
+        return $query->where('user_id', $user->id);
     }
 }

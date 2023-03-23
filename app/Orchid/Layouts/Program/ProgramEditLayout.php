@@ -2,6 +2,8 @@
 
 namespace App\Orchid\Layouts\Program;
 
+use Illuminate\Support\Facades\Auth;
+
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Relation;
@@ -34,7 +36,8 @@ class ProgramEditLayout extends Rows
             Relation::make('program.community_id')
                 ->title('Community')
                 ->fromModel(Community::class, 'name')
-                ->required(),
+                ->required()
+                ->applyScope('ofUser', Auth::user()),
 
             TextArea::make('program.purpose')
                 ->title('Purpose'),

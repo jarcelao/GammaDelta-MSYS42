@@ -65,6 +65,10 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+
+            ItemPermission::group('Community')
+                ->addPermission('platform.community', 'Manage Communities')
+                ->addPermission('platform.community.approve', 'Approve Communities'),
         ];
     }
 }

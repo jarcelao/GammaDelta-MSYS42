@@ -102,19 +102,12 @@ Route::screen('communities/manage/{community}', CommunityManageScreen::class)
         ->parent('platform.community')
         ->push(__('Manage'), route('platform.community.manage', $community)));
 
-// Platform > Team
-Route::screen('teams', TeamListScreen::class)
-    ->name('platform.team')
-    ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.index')
-        ->push(__('Team'), route('platform.team')));
-
 // Platform > Team > Manage
 Route::screen('teams/manage/{team?}', TeamEditScreen::class)
     ->name('platform.team.manage')
     ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.team')
-        ->push(__('Manage'), route('platform.team.manage')));
+        ->parent('platform.index')
+        ->push(__('Manage Team'), route('platform.team.manage')));
 
 // Platform > Manage Program
 Route::screen('programs/manage/{program?}', ProgramEditScreen::class)

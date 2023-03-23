@@ -104,11 +104,11 @@ class TeamEditScreen extends Screen
     {
         $team->fill($request->get('team'));
 
+        $team->save();
+
         foreach ($request->get('team_members') as $teamMember) {
             $team->teamMembers()->save(TeamMember::where('id', $teamMember)->first());
         }
-
-        $team->save();
 
         Toast::info('Team saved.');
         

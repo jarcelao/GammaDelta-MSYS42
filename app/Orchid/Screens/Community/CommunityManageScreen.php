@@ -3,14 +3,11 @@
 namespace App\Orchid\Screens\Community;
 
 use App\Models\Community;
-use App\Orchid\Layouts\Community\CommunityEditLayout;
-use Illuminate\Http\Request;
-use Orchid\Screen\Actions\Button;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Sight;
 use Orchid\Support\Facades\Layout;
-use Orchid\Support\Facades\Toast;
 
 class CommunityManageScreen extends Screen
 {
@@ -59,34 +56,52 @@ class CommunityManageScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block(CommunityEditLayout::class)
-            ->title('Community Details')
-            ->commands(
-                Button::make('Save')
-                    ->icon('check')
-                    ->method('saveDetails')
-            ),
-
             Layout::block(Layout::legend('community', [
-                Sight::make('team.teamLeader.name', 'Team Leader'),
+                Sight::make('name', 'Name'),
+                Sight::make('country', 'Country'),
+                Sight::make('region', 'Region'),
+                Sight::make('language', 'Language'),
+                Sight::make('', 'Creator')
+                    ->render(function () {
+                        return '
+                                ' . $this->community->user->name . '
+                                <br>
+                                ' . $this->community->user->email . '
+                                <br>
+                                ' . $this->community->user->contact . '
+                            ';
+                    }),
+            ]))
+                ->title('Community Details'),
+
+            Layout::block(Layout::legend('', [
+                Sight::make('', 'Team Leader')
+                    ->render(function () {
+                        if ($this->community->team) {
+                            return $this->community->team->teamLeader->name;
+                        }
+
+                        return '';
+                    }),
                 Sight::make('', 'Team Members')
                     ->render(function () {
                         if ($this->community->team) {
                             return $this->community->team->teamMembers->map(function ($member) {
                                 return $member->name;
-                            })->implode('\n');
+                            })->implode('<br>');
                         }
-                        
+
                         return '';
-                    })
+                    }),
             ]))
                 ->title('Team Details')
                 ->commands(
                     Link::make('Manage Team')
                         ->route('platform.team.manage', ($this->community->team) ? $this->community->team->id : null)
                         ->icon('pencil')
+                        ->canSee(Auth::user()->hasAccess('platform.community'))
                 ),
-                
+
             Layout::block(Layout::legend('community', [
                 Sight::make('program.title', 'Program Title'),
                 Sight::make('program.status', 'Program Status'),
@@ -95,23 +110,9 @@ class CommunityManageScreen extends Screen
                 ->commands(
                     Link::make('Manage Program')
                         ->route('platform.program.manage', ($this->community->program) ? $this->community->program->id : null)
-                        ->icon('pencil')
+                        ->icon('pencil'),
                 ),
 
         ];
-    }
-
-    /**
-     * Handle the form submission.
-     *
-     * @param Community $community
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saveDetails(Community $community, Request $request)
-    {
-        $community->fill($request->get('community'))->save();
-        Toast::success('Community updated');
-        return redirect()->route('platform.community');
     }
 }

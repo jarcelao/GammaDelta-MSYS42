@@ -25,10 +25,21 @@ class UserPasswordLayout extends Rows
             ? __('Leave empty to keep current password')
             : __('Enter the password to be set');
 
-        return [
-            Password::make('user.password')
-                ->placeholder($placeholder)
-                ->title(__('Password')),
-        ];
+        if ($user->exists) {
+            return [
+                Password::make('user.password')
+                    ->placeholder($placeholder)
+                    ->title(__('Password')),
+            ];
+        } else {
+            return [
+                Password::make('user.password')
+                    ->placeholder($placeholder)
+                    ->title(__('Password'))
+                    ->required(),
+            ];
+        }
+
+        return [];
     }
 }

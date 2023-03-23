@@ -38,7 +38,8 @@ class TeamEditLayout extends Rows
             Relation::make('team_members.')
                 ->title('Team Members')
                 ->fromModel(TeamMember::class, 'name')
-                ->multiple(),
+                ->multiple()
+                ->required(),
         ];
     }
 }

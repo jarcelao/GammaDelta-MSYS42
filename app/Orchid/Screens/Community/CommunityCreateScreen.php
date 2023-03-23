@@ -65,7 +65,9 @@ class CommunityCreateScreen extends Screen
      */
     public function create(Community $community, Request $request)
     {
-        $community->fill($request->get('community'))->save();
+        $community->fill($request->get('community'));
+        $community->user_id = $request->user()->id;
+        $community->save();
         
         Toast::success('Community created');
         return redirect()->route('platform.community');
