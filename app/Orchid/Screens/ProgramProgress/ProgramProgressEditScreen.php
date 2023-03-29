@@ -129,19 +129,6 @@ class ProgramProgressEditScreen extends Screen
             if ($this->programprogress->status == 'Drafted' && Auth::user()->hasAccess('platform.community')) {
                 $layout[] = ProgramProgressEditLayout::class;
 
-                $layout[] = Layout::block(
-                    Layout::table('programprogress.budgetRequests', [
-                        TD::make('', 'Account')
-                            ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
-                                return $budgetRequest->account;
-                            }),
-                        TD::make('', 'Amount')
-                            ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
-                                return $budgetRequest->amount;
-                            }),
-                    ]))
-                    ->title('Budget Requests');
-
                 $layout[] = Layout::modal('newBudgetRequest', [
                     Layout::rows([
                         Input::make('budgetRequest.account')
@@ -167,6 +154,26 @@ class ProgramProgressEditScreen extends Screen
                         }),
                 ]);
             }
+
+            $layout[] = Layout::block(
+                Layout::table('programprogress.budgetRequests', [
+                    TD::make('', 'Account')
+                        ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
+                            return $budgetRequest->account;
+                        }),
+                    TD::make('', 'Amount')
+                        ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
+                            return $budgetRequest->amount;
+                        }),
+                    TD::make('', '')
+                        ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
+                            return Button::make('Delete')
+                                ->icon('trash')
+                                ->method('deleteBudgetRequest', ['budgetRequest' => $budgetRequest->id])
+                                ->canSee($this->programprogress->status == 'Drafted' && Auth::user()->hasAccess('platform.community'));
+                        })  
+                ]))
+                ->title('Budget Requests');
         }
 
         return $layout;
@@ -236,5 +243,18 @@ class ProgramProgressEditScreen extends Screen
         $budgetRequest->save();
 
         Toast::info('Budget request added.');
+    }
+
+    /**
+     * Handle deleting budget request
+     * 
+     * @param Request $request
+     */
+    public function deleteBudgetRequest(Request $request)
+    {
+        $budgetRequest = ProgramProgressBudgetRequest::find($request->get('budgetRequest'));
+        $budgetRequest->delete();
+
+        Toast::info('Budget request deleted.'); 
     }
 }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Orchid\Screen\AsSource;
+use Orchid\Filters\Filterable;
 
 class ProgramProgress extends Model
 {
-    use AsSource;
+    use AsSource, Filterable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +18,20 @@ class ProgramProgress extends Model
     protected $fillable = [
         'program_id',
         'writeup',
+    ];
+
+    /**
+     * The attributes that can be sorted.
+     */
+    public $allowedSorts = [
+        'created_at',
+    ];
+
+    /**
+     * The attributes that can be filtered.
+     */
+    public $allowedFilters = [
+        'status',
     ];
 
     /**

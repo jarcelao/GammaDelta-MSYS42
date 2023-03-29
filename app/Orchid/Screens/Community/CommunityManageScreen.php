@@ -116,21 +116,24 @@ class CommunityManageScreen extends Screen
                 ),
 
             Layout::block(Layout::table('community.program.progress', [
-                TD::make('', 'Date')
+                TD::make('created_at', 'Date')
                     ->render(function (ProgramProgress $programprogress) {
                         return Link::make($programprogress->created_at->format('d/m/Y'))
                             ->route('platform.program.report', $programprogress->id);
-                    }),
-                TD::make('', 'Status')
+                    })
+                    ->sort(),
+                TD::make('status', 'Status')
                     ->render(function (ProgramProgress $programprogress) {
                         return $programprogress->status;
-                    }),
+                    })
+                    ->filter(TD::FILTER_SELECT, ProgramProgress::pluck('status', 'status')->toArray()),
             ]))
                 ->title('Program Progress Reports')
                 ->commands(
                     Link::make('Add Progress Report')
                         ->route('platform.program.report')
-                        ->icon('plus'),
+                        ->icon('plus')
+                        ->canSee(Auth::user()->hasAccess('platform.community')),
                 )
                 ->canSee($this->community->program()->exists()),
         ];
