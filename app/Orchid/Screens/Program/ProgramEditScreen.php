@@ -122,15 +122,8 @@ class ProgramEditScreen extends Screen
             if ($this->program->status == 'Drafted' && Auth::user()->hasAccess('platform.community')) {
                 $layout[] = ProgramEditLayout::class;
             } else {
-                /**
-                 * This legend was manually created because the Sight class raises the
-                 * following error when used in this screen:
-                 * 
-                 * Call to undefined method App\Models\Program::getContent()
-                 */
-
-                $layout[] = Layout::legend('program', [
-                    Sight::make('title', 'Title')
+                $layout[] = Layout::legend('', [
+                    Sight::make('', 'Title')
                         ->render(function () {
                             return $this->program->title;
                         }),

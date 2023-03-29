@@ -12,10 +12,11 @@ use App\Orchid\Screens\Community\CommunityListScreen;
 use App\Orchid\Screens\Community\CommunityCreateScreen;
 use App\Orchid\Screens\Community\CommunityManageScreen;
 use App\Orchid\Screens\Team\TeamListScreen;
-use Illuminate\Support\Facades\Route;
-use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Team\TeamEditScreen;
 use App\Orchid\Screens\Program\ProgramEditScreen;
+use App\Orchid\Screens\ProgramProgress\ProgramProgressEditScreen;
+use Illuminate\Support\Facades\Route;
+use Tabuna\Breadcrumbs\Trail;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,3 +116,10 @@ Route::screen('programs/manage/{program?}', ProgramEditScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Manage'), route('platform.program.manage')));
+
+// Platform > Manage Program Report
+Route::screen('programs/report/{programprogess?}', ProgramProgressEditScreen::class)
+    ->name('platform.program.report')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Manage'), route('platform.program.report')));

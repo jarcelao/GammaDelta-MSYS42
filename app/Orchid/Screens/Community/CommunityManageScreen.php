@@ -3,10 +3,12 @@
 namespace App\Orchid\Screens\Community;
 
 use App\Models\Community;
+use App\Models\ProgramProgress;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Sight;
+use Orchid\Screen\TD;
 use Orchid\Support\Facades\Layout;
 
 class CommunityManageScreen extends Screen
@@ -99,7 +101,7 @@ class CommunityManageScreen extends Screen
                     Link::make('Manage Team')
                         ->route('platform.team.manage', ($this->community->team) ? $this->community->team->id : null)
                         ->icon('pencil')
-                        ->canSee(Auth::user()->hasAccess('platform.community'))
+                        ->canSee(Auth::user()->hasAccess('platform.community')),
                 ),
 
             Layout::block(Layout::legend('community', [
@@ -113,6 +115,24 @@ class CommunityManageScreen extends Screen
                         ->icon('pencil'),
                 ),
 
+            Layout::block(Layout::table('community.program.progress', [
+                TD::make('', 'Date')
+                    ->render(function (ProgramProgress $programprogress) {
+                        return Link::make($programprogress->created_at->format('d/m/Y'))
+                            ->route('platform.program.report', $programprogress->id);
+                    }),
+                TD::make('', 'Status')
+                    ->render(function (ProgramProgress $programprogress) {
+                        return $programprogress->status;
+                    }),
+            ]))
+                ->title('Program Progress Reports')
+                ->commands(
+                    Link::make('Add Progress Report')
+                        ->route('platform.program.report')
+                        ->icon('plus'),
+                )
+                ->canSee($this->community->program()->exists()),
         ];
     }
 }

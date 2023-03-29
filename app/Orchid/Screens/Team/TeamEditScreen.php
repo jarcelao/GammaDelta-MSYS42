@@ -85,7 +85,6 @@ class TeamEditScreen extends Screen
     /**
      * Handle the creation of a new team member.
      * 
-     * @param TeamMember $teamMember
      * @param Request $request
      */
     public function createMember(Request $request)

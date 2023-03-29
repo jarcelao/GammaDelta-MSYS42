@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Screen\AsSource;
 
 class ProgramProgress extends Model
 {
+    use AsSource;
+
     /**
      * The attributes that are mass assignable.
      * 
@@ -14,7 +17,6 @@ class ProgramProgress extends Model
     protected $fillable = [
         'program_id',
         'writeup',
-        'status',
     ];
 
     /**
