@@ -3,12 +3,17 @@
 namespace App\Orchid\Screens\Program;
 
 use App\Models\Program;
+use App\Models\StorySet;
+use App\Models\ProgramStorySet;
 use App\Orchid\Layouts\Program\ProgramEditLayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Sight;
+use Orchid\Screen\TD;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -24,10 +29,11 @@ class ProgramEditScreen extends Screen
      *
      * @return array
      */
-    public function query(Program $program): iterable
+    public function query(Program $program, StorySet $storySet): iterable
     {
         return [
             'program' => $program,
+            'storysets' => $storySet->programs()->where('program_id', $program->id)->get(),
         ];
     }
 
@@ -92,6 +98,11 @@ class ProgramEditScreen extends Screen
                     ->method('createOrUpdate');
             } else {
                 if ($this->program->status == 'Drafted') {
+                    $commandBar[] = ModalToggle::make('Add Story Set')
+                        ->icon('plus')
+                        ->modal('addStorySet')
+                        ->method('addStorySet');
+
                     $commandBar[] = Button::make('Save')
                         ->icon('pencil')
                         ->method('createOrUpdate');
@@ -169,6 +180,31 @@ class ProgramEditScreen extends Screen
                         }),
                 ]);
             }
+
+            $layout[] = Layout::modal('addStorySet', [
+                Layout::rows([
+                    Input::make('storyset.title')
+                        ->title('Title')
+                        ->required(),
+                    Input::make('storyset.references')
+                        ->title('References')
+                        ->required(),
+                    Input::make('programstoryset.theme')
+                        ->title('Theme')
+                        ->required(),
+                ])
+            ])
+                ->title('Add Story Set');
+
+            $layout[] = Layout::table('storysets', [
+                TD::make('title', 'Title'),
+                TD::make('references', 'References'),
+                TD::make('', 'Theme')
+                    ->render(function (StorySet $storySet) {
+                        return $storySet->pivot->theme;
+                    }),
+            ])
+                ->title('Story Sets');
         }
 
         return $layout;
@@ -222,5 +258,26 @@ class ProgramEditScreen extends Screen
         Toast::info('Program approved.');
 
         return redirect()->route('platform.community.manage', $program->community);
+    }
+
+    /**
+     * Handle adding story set
+     * 
+     * @param Program $program
+     * @param Request $request
+     */
+    public function addStorySet(Program $program, Request $request)
+    {
+        $storySet = new StorySet();
+        $storySet->fill($request->get('storyset'));
+        $storySet->save();
+
+        $programStorySet = new ProgramStorySet();
+        $programStorySet->program_id = $program->id;
+        $programStorySet->story_set_id = $storySet->id;
+        $programStorySet->theme = $request->get('programstoryset.theme');
+        $programStorySet->save();
+
+        Toast::info('Story set added.');
     }
 }

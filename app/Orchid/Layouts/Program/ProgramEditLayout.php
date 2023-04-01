@@ -36,8 +36,7 @@ class ProgramEditLayout extends Rows
             Relation::make('program.community_id')
                 ->title('Community')
                 ->fromModel(Community::class, 'name')
-                ->required()
-                ->applyScope('ofUser', Auth::user()),
+                ->required(),
 
             TextArea::make('program.purpose')
                 ->title('Purpose'),
