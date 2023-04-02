@@ -16,7 +16,7 @@ class CommunityManageScreen extends Screen
     /**
      * @var Community
      */
-    public $community;
+    public Community $community;
 
     /**
      * Fetch data to be displayed on the screen.
@@ -77,23 +77,16 @@ class CommunityManageScreen extends Screen
                 ->title('Community Details'),
 
             Layout::block(Layout::legend('', [
-                Sight::make('', 'Team Leader')
+                Sight::make('team.teamLeader', 'Team Leader')
                     ->render(function () {
-                        if ($this->community->team) {
-                            return $this->community->team->teamLeader->name;
-                        }
+                        return $this->community->team ? $this->community->team->teamLeader->name : '';
 
-                        return '';
                     }),
                 Sight::make('', 'Team Members')
                     ->render(function () {
-                        if ($this->community->team) {
-                            return $this->community->team->teamMembers->map(function ($member) {
-                                return $member->name;
-                            })->implode('<br>');
-                        }
-
-                        return '';
+                        return $this->community->team ? $this->community->team->teamMembers->map(function ($member) {
+                            return $member->name;
+                        })->implode('<br>') : '';
                     }),
             ]))
                 ->title('Team Details')
@@ -136,6 +129,17 @@ class CommunityManageScreen extends Screen
                         ->canSee(Auth::user()->hasAccess('platform.community')),
                 )
                 ->canSee($this->community->program()->exists()),
+
+            Layout::block(Layout::legend('community', [
+                Sight::make('project.title', 'Project Title'),
+                Sight::make('project.status', 'Project Status'),
+            ]))
+                ->title('Project Details')
+                ->commands(
+                    Link::make('Manage Project')
+                        ->route('platform.project.manage', ($this->community->project) ? $this->community->project->id : null)
+                        ->icon('pencil'),
+                ),
         ];
     }
 }

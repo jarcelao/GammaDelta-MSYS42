@@ -3,15 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Screen\AsSource;
 
 class Project extends Model
 {
+    use AsSource;
+
     /**
      * The attributes that are mass assignable.
-     * 
+     *
      * @var array
      */
     protected $fillable = [
+        'community_id',
         'title',
         'purpose',
         'indicators',

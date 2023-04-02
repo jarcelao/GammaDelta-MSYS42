@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Program;
 use Illuminate\Database\Eloquent\Model;
 use Orchid\Screen\AsSource;
 
@@ -12,7 +11,7 @@ class StorySet extends Model
 
     /**
      * The attributes that are mass assignable.
-     * 
+     *
      * @var array
      */
     protected $fillable = [

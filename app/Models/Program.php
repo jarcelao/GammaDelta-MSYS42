@@ -45,4 +45,15 @@ class Program extends Model
     {
         return $this->hasMany(ProgramProgress::class);
     }
+
+    /**
+     * Scope the query to only include programs under a user's communities
+     */
+    public function scopeOfUser($query, $user)
+    {
+        if ($user->hasAnyAccess(['platform.systems.roles', 'platform.systems.users']))
+            return $query;
+
+        return $query->whereIn('community_id', $user->communities->pluck('id'));
+    }
 }

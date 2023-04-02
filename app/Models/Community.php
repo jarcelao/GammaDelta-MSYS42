@@ -73,4 +73,16 @@ class Community extends Model
     {
         return $this->hasOne('App\Models\Project');
     }
+
+    /**
+     * Scope a query to only include communities of a given user.
+     */
+    public function scopeOfUser($query, $user)
+    {
+        if ($user->hasAnyAccess(['platform.systems.roles', 'platform.systems.users'])) {
+            return $query;
+        }
+
+        return $query->where('user_id', $user->id);
+    }
 }

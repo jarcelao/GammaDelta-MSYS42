@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 // use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\Project\ProjectEditScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -11,7 +12,6 @@ use App\Orchid\Screens\User\UserProfileScreen;
 use App\Orchid\Screens\Community\CommunityListScreen;
 use App\Orchid\Screens\Community\CommunityCreateScreen;
 use App\Orchid\Screens\Community\CommunityManageScreen;
-use App\Orchid\Screens\Team\TeamListScreen;
 use App\Orchid\Screens\Team\TeamEditScreen;
 use App\Orchid\Screens\Program\ProgramEditScreen;
 use App\Orchid\Screens\ProgramProgress\ProgramProgressEditScreen;
@@ -123,3 +123,10 @@ Route::screen('programs/report/{programprogess?}', ProgramProgressEditScreen::cl
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Manage'), route('platform.program.report')));
+
+// Platform > Manage Project
+Route::screen('projects/manage/{project?}', ProjectEditScreen::class)
+    ->name('platform.project.manage')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Manage'), route('platform.project.manage')));

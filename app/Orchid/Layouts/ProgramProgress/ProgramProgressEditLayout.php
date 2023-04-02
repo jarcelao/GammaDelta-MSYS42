@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\ProgramProgress;
 
 use App\Models\Program;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\TextArea;
@@ -28,6 +29,7 @@ class ProgramProgressEditLayout extends Rows
             Relation::make('programprogress.program_id')
                 ->title('Program')
                 ->fromModel(Program::class, 'title')
+                ->applyScope('ofUser', Auth::user())
                 ->required(),
 
             TextArea::make('programprogress.writeup')

@@ -64,4 +64,12 @@ class User extends Authenticatable
         'updated_at',
         'created_at',
     ];
+
+    /**
+     * Get the communities assigned to the user.
+     */
+    public function communities()
+    {
+        return $this->belongsToMany(Community::class);
+    }
 }

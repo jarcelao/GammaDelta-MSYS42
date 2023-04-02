@@ -29,11 +29,11 @@ class ProgramEditScreen extends Screen
      *
      * @return array
      */
-    public function query(Program $program, StorySet $storySet): iterable
+    public function query(Program $program, ProgramStorySet $programStorySet): iterable
     {
         return [
             'program' => $program,
-            'storysets' => $storySet->programs()->where('program_id', $program->id)->get(),
+            'storysets' => $programStorySet->where('program_id', $program->id)->get(),
         ];
     }
 
@@ -49,7 +49,7 @@ class ProgramEditScreen extends Screen
 
     /**
      * The description of the screen displayed in the header.
-     * 
+     *
      * @return string|null
      */
     public function description(): ?string
@@ -58,16 +58,12 @@ class ProgramEditScreen extends Screen
             if ($this->program->status == 'For Approval') {
                 return 'This program is currently awaiting approval and cannot be edited.';
             }
-            
+
             else if ($this->program->status == 'Approved') {
                 return 'This program has been approved and cannot be edited.';
             }
-        }
-
-        else {
-            if (Auth::user()->hasAccess('platform.community.approve')) {
-                return 'A program has not been created yet. Please ask the assigned coordinator to create one.';
-            }
+        } elseif (Auth::user()->hasAccess('platform.community.approve')) {
+            return 'A program has not been submitted yet. Please ask the assigned coordinator to submit one.';
         }
 
         return '';
@@ -82,13 +78,11 @@ class ProgramEditScreen extends Screen
     {
         $commandBar = [];
 
-        if (Auth::user()->hasAccess('platform.community.approve') && $this->program->exists) {
-            if ($this->program->status == 'For Approval') {
-                $commandBar[] = Button::make('Approve')
-                    ->icon('check')
-                    ->method('approve')
-                    ->confirm('Are you sure you want to approve this program? This action cannot be undone.');
-            }
+        if (Auth::user()->hasAccess('platform.community.approve') && $this->program->exists && $this->program->status == 'For Approval') {
+            $commandBar[] = Button::make('Approve')
+                ->icon('check')
+                ->method('approve')
+                ->confirm('Are you sure you want to approve this program? This action cannot be undone.');
         }
 
         if (Auth::user()->hasAccess('platform.community')) {
@@ -96,22 +90,15 @@ class ProgramEditScreen extends Screen
                 $commandBar[] = Button::make('Create')
                     ->icon('plus')
                     ->method('createOrUpdate');
-            } else {
-                if ($this->program->status == 'Drafted') {
-                    $commandBar[] = ModalToggle::make('Add Story Set')
-                        ->icon('plus')
-                        ->modal('addStorySet')
-                        ->method('addStorySet');
+            } elseif ($this->program->status == 'Drafted') {
+                $commandBar[] = Button::make('Save')
+                    ->icon('pencil')
+                    ->method('createOrUpdate');
 
-                    $commandBar[] = Button::make('Save')
-                        ->icon('pencil')
-                        ->method('createOrUpdate');
-
-                    $commandBar[] = Button::make('Submit')
-                        ->icon('check')
-                        ->method('submit')
-                        ->confirm('Once the program is submitted, it cannot be edited.');
-                }
+                $commandBar[] = Button::make('Submit')
+                    ->icon('check')
+                    ->method('submit')
+                    ->confirm('Once the program is submitted, it cannot be edited.');
             }
         }
 
@@ -129,91 +116,68 @@ class ProgramEditScreen extends Screen
 
         if (!$this->program->exists && Auth::user()->hasAccess('platform.community')) {
             $layout[] = ProgramEditLayout::class;
+        } elseif ($this->program->status == 'Drafted' && Auth::user()->hasAccess('platform.community')) {
+            $layout[] = ProgramEditLayout::class;
         } else {
-            if ($this->program->status == 'Drafted' && Auth::user()->hasAccess('platform.community')) {
-                $layout[] = ProgramEditLayout::class;
-            } else {
-                $layout[] = Layout::legend('', [
-                    Sight::make('', 'Title')
-                        ->render(function () {
-                            return $this->program->title;
-                        }),
-                    Sight::make('', 'Purpose')
-                        ->render(function () {
-                            return $this->program->purpose;
-                        }),
-                    Sight::make('', 'Indicators')
-                        ->render(function () {
-                            return $this->program->indicators;
-                        }),
-                    Sight::make('', 'Start Date')
-                        ->render(function () {
-                            return $this->program->start_date;
-                        }),
-                    Sight::make('', 'End Date')
-                        ->render(function () {
-                            return $this->program->end_date;
-                        }),
-                    Sight::make('', 'Assumptions and Risks')
-                        ->render(function () {
-                            return $this->program->assumptions_and_risks;
-                        }),
-                    Sight::make('', 'Inputs')
-                        ->render(function () {
-                            return $this->program->inputs;
-                        }),
-                    Sight::make('', 'Activities')
-                        ->render(function () {
-                            return $this->program->activities;
-                        }),
-                    Sight::make('', 'Outputs')
-                        ->render(function () {
-                            return $this->program->outputs;
-                        }),
-                    Sight::make('', 'Outcomes')
-                        ->render(function () {
-                            return $this->program->outcomes;
-                        }),
-                    Sight::make('', 'Why')
-                        ->render(function () {
-                            return $this->program->why;
-                        }),
-                ]);
-            }
-
-            $layout[] = Layout::modal('addStorySet', [
-                Layout::rows([
-                    Input::make('storyset.title')
-                        ->title('Title')
-                        ->required(),
-                    Input::make('storyset.references')
-                        ->title('References')
-                        ->required(),
-                    Input::make('programstoryset.theme')
-                        ->title('Theme')
-                        ->required(),
-                ])
-            ])
-                ->title('Add Story Set');
-
-            $layout[] = Layout::table('storysets', [
-                TD::make('title', 'Title'),
-                TD::make('references', 'References'),
-                TD::make('', 'Theme')
-                    ->render(function (StorySet $storySet) {
-                        return $storySet->pivot->theme;
-                    }),
-            ])
-                ->title('Story Sets');
+            $layout[] = Layout::legend('program', [
+                Sight::make('title'),
+                Sight::make('purpose'),
+                Sight::make('indicators'),
+                Sight::make('start_date', 'Start Date'),
+                Sight::make('end_date', 'End Date'),
+                Sight::make('assumptions_and_risks', 'Assumptions and Risks'),
+                Sight::make('inputs'),
+                Sight::make('activities'),
+                Sight::make('outputs'),
+                Sight::make('why'),
+            ]);
         }
+
+        $layout[] = Layout::modal('addStorySet', [
+            Layout::rows([
+                Input::make('storyset.title')
+                    ->title('Title')
+                    ->required(),
+                Input::make('storyset.references')
+                    ->title('References')
+                    ->required(),
+                Input::make('programstoryset.theme')
+                    ->title('Theme')
+                    ->required(),
+            ]),
+        ])
+            ->title('Add Story Set');
+
+        $layout[] = Layout::block(
+            Layout::table('storysets', [
+                TD::make('', 'Title')
+                    ->render(function (ProgramStorySet $programStorySet) {
+                        return $programStorySet->storySet->title;
+                    }),
+                TD::make('', 'References')
+                    ->render(function (ProgramStorySet $programStorySet) {
+                        return $programStorySet->storySet->references;
+                    }),
+                TD::make('theme', 'Theme'),
+            ])
+        )
+            ->title('Story Sets')
+            ->commands(
+                ModalToggle::make('Add Story Set')
+                    ->icon('plus')
+                    ->modal('addStorySet')
+                    ->method('addStorySet')
+                    ->canSee($this->program->status == 'Drafted' && Auth::user()->hasAccess('platform.community')),
+            );
 
         return $layout;
     }
 
     /**
      * Handle creating or updating program
-     * 
+     *
      * @param Program $program
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function createOrUpdate(Program $program, Request $request)
@@ -229,8 +193,9 @@ class ProgramEditScreen extends Screen
 
     /**
      * Handle submitting program
-     * 
+     *
      * @param Program $program
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function submit(Program $program, Request $request)
@@ -246,7 +211,7 @@ class ProgramEditScreen extends Screen
 
     /**
      * Handle approving program
-     * 
+     *
      * @param Program $program
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -262,7 +227,7 @@ class ProgramEditScreen extends Screen
 
     /**
      * Handle adding story set
-     * 
+     *
      * @param Program $program
      * @param Request $request
      */
@@ -275,7 +240,7 @@ class ProgramEditScreen extends Screen
         $programStorySet = new ProgramStorySet();
         $programStorySet->program_id = $program->id;
         $programStorySet->story_set_id = $storySet->id;
-        $programStorySet->theme = $request->get('programstoryset.theme');
+        $programStorySet->theme = $request->input('programstoryset.theme');
         $programStorySet->save();
 
         Toast::info('Story set added.');

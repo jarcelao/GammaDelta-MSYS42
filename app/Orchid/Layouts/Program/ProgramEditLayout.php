@@ -32,10 +32,11 @@ class ProgramEditLayout extends Rows
             Input::make('program.title')
                 ->title('Title')
                 ->required(),
-            
+
             Relation::make('program.community_id')
                 ->title('Community')
                 ->fromModel(Community::class, 'name')
+                ->applyScope('ofUser', Auth::user())
                 ->required(),
 
             TextArea::make('program.purpose')
@@ -63,7 +64,7 @@ class ProgramEditLayout extends Rows
 
             TextArea::make('program.outputs')
                 ->title('Outputs'),
-            
+
             TextArea::make('program.outcomes')
                 ->title('Outcomes'),
 
