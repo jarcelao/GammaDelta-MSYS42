@@ -43,4 +43,15 @@ class Project extends Model
     {
         return $this->hasMany(ProjectProgress::class);
     }
+
+    /**
+     * Scope the query to only include projects under a user's communities
+     */
+    public function scopeOfUser($query, $user)
+    {
+        if ($user->hasAnyAccess(['platform.systems.roles', 'platform.systems.users']))
+            return $query;
+
+        return $query->whereIn('community_id', $user->communities->pluck('id'));
+    }
 }

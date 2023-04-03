@@ -167,7 +167,8 @@ class ProgramEditScreen extends Screen
                     ->icon('plus')
                     ->modal('addStorySet')
                     ->method('addStorySet')
-                    ->canSee($this->program->status == 'Drafted' && Auth::user()->hasAccess('platform.community')),
+                    ->canSee($this->program->status == 'Drafted'
+                        && Auth::user()->hasAccess('platform.community')),
             );
 
         return $layout;

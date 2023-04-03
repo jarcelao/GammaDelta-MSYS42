@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Community;
 
 use App\Models\Community;
 use App\Models\ProgramProgress;
+use App\Models\ProjectProgress;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
@@ -92,7 +93,8 @@ class CommunityManageScreen extends Screen
                 ->title('Team Details')
                 ->commands(
                     Link::make('Manage Team')
-                        ->route('platform.team.manage', ($this->community->team) ? $this->community->team->id : null)
+                        ->route('platform.team.manage', ($this->community->team)
+                            ? $this->community->team->id : null)
                         ->icon('pencil')
                         ->canSee(Auth::user()->hasAccess('platform.community')),
                 ),
@@ -104,7 +106,8 @@ class CommunityManageScreen extends Screen
                 ->title('Program Details')
                 ->commands(
                     Link::make('Manage Program')
-                        ->route('platform.program.manage', ($this->community->program) ? $this->community->program->id : null)
+                        ->route('platform.program.manage', ($this->community->program)
+                            ? $this->community->program->id : null)
                         ->icon('pencil'),
                 ),
 
@@ -137,9 +140,32 @@ class CommunityManageScreen extends Screen
                 ->title('Project Details')
                 ->commands(
                     Link::make('Manage Project')
-                        ->route('platform.project.manage', ($this->community->project) ? $this->community->project->id : null)
+                        ->route('platform.project.manage', ($this->community->project)
+                            ? $this->community->project->id : null)
                         ->icon('pencil'),
                 ),
+
+            Layout::block(Layout::table('community.project.progress', [
+                TD::make('created_at', 'Date')
+                    ->render(function (ProjectProgress $projectProgress) {
+                        return Link::make($projectProgress->created_at->format('d/m/Y'))
+                            ->route('platform.project.report', $projectProgress->id);
+                    })
+                    ->sort(),
+                TD::make('status', 'Status')
+                    ->render(function (ProjectProgress $projectProgress) {
+                        return $projectProgress->status;
+                    })
+                    ->filter(TD::FILTER_SELECT, ProjectProgress::pluck('status', 'status')->toArray()),
+            ]))
+                ->title('Project Progress Reports')
+                ->commands(
+                    Link::make('Add Progress Report')
+                        ->route('platform.project.report')
+                        ->icon('plus')
+                        ->canSee(Auth::user()->hasAccess('platform.community')),
+                )
+                ->canSee($this->community->project()->exists()),
         ];
     }
 }

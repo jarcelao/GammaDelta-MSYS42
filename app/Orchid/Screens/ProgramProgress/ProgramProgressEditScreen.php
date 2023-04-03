@@ -5,8 +5,10 @@ namespace App\Orchid\Screens\ProgramProgress;
 use App\Models\ProgramProgress;
 use App\Models\ProgramProgressBudgetRequest;
 use App\Orchid\Layouts\ProgramProgress\ProgramProgressEditLayout;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
@@ -47,7 +49,7 @@ class ProgramProgressEditScreen extends Screen
 
     /**
      * The description of the screen displayed in the header.
-     * 
+     *
      * @return string|null
      */
     public function description(): ?string
@@ -55,17 +57,11 @@ class ProgramProgressEditScreen extends Screen
         if ($this->programprogress->exists) {
             if ($this->programprogress->status == 'For Approval') {
                 return 'This program report is currently awaiting approval and cannot be edited.';
+            } else if ($this->programprogress->status == 'Funded') {
+                return 'This program report has been funded and cannot be edited.';
             }
-            
-            else if ($this->programprogress->status == 'Approved') {
-                return 'This program report has been approved and cannot be edited.';
-            }
-        }
-
-        else {
-            if (Auth::user()->hasAccess('platform.community.approve')) {
-                return 'A program report has not been created yet. Please ask the assigned coordinator to create one.';
-            }
+        } elseif (Auth::user()->hasAccess('platform.community.approve')) {
+            return 'A program report has not been submitted yet. Please ask the assigned coordinator to submit one.';
         }
 
         return '';
@@ -74,13 +70,15 @@ class ProgramProgressEditScreen extends Screen
     /**
      * The screen's action buttons.
      *
-     * @return \Orchid\Screen\Action[]
+     * @return Action[]
      */
     public function commandBar(): iterable
     {
         $commandBar = [];
 
-        if (Auth::user()->hasAccess('platform.community.approve') && $this->programprogress->exists && $this->programprogress->status == 'For Approval') {
+        if (Auth::user()->hasAccess('platform.community.approve')
+            && $this->programprogress->exists
+            && $this->programprogress->status == 'For Approval') {
             $commandBar[] = Button::make('Approve')
                 ->icon('check')
                 ->method('approve')
@@ -88,12 +86,6 @@ class ProgramProgressEditScreen extends Screen
         }
 
         if (Auth::user()->hasAccess('platform.community')) {
-            $commandBar[] = ModalToggle::make('New Budget Request')
-                ->modal('newBudgetRequest')
-                ->icon('plus')
-                ->method('createBudgetRequest')
-                ->canSee($this->programprogress->exists && $this->programprogress->status == 'Drafted');
-
             $commandBar[] = Button::make('Create')
                 ->icon('plus')
                 ->method('createOrUpdate')
@@ -123,67 +115,70 @@ class ProgramProgressEditScreen extends Screen
     {
         $layout = [];
 
-        if (!$this->programprogress->exists && Auth::user()->hasAccess('platform.community')) {
+        if ((!$this->programprogress->exists || $this->programprogress->status == 'Drafted')
+            && Auth::user()->hasAccess('platform.community')) {
             $layout[] = ProgramProgressEditLayout::class;
         } else {
-            if ($this->programprogress->status == 'Drafted' && Auth::user()->hasAccess('platform.community')) {
-                $layout[] = ProgramProgressEditLayout::class;
-
-                $layout[] = Layout::modal('newBudgetRequest', [
-                    Layout::rows([
-                        Input::make('budgetRequest.account')
-                            ->title('Account')
-                            ->required(),
-                        Input::make('budgetRequest.amount')
-                            ->title('Amount')
-                            ->type('number')
-                            ->required(),
-                    ]),
-                ])
-                    ->title('New Budget Request')
-                    ->applyButton('Add');
-            } else {
-                $layout[] = Layout::legend('programprogress', [
-                    Sight::make('', 'Program Title')
-                        ->render(function () {
-                            return $this->programprogress->program->title;
-                        }),
-                    Sight::make('', 'Writeup')
-                        ->render(function () {
-                            return $this->programprogress->writeup;
-                        }),
-                ]);
-            }
-
-            $layout[] = Layout::block(
-                Layout::table('programprogress.budgetRequests', [
-                    TD::make('', 'Account')
-                        ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
-                            return $budgetRequest->account;
-                        }),
-                    TD::make('', 'Amount')
-                        ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
-                            return $budgetRequest->amount;
-                        }),
-                    TD::make('', '')
-                        ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
-                            return Button::make('Delete')
-                                ->icon('trash')
-                                ->method('deleteBudgetRequest', ['budgetRequest' => $budgetRequest->id])
-                                ->canSee($this->programprogress->status == 'Drafted' && Auth::user()->hasAccess('platform.community'));
-                        })  
-                ]))
-                ->title('Budget Requests');
+            $layout[] = Layout::legend('programprogress', [
+                Sight::make('', 'Program Title')
+                    ->render(function () {
+                        return $this->programprogress->program->title;
+                    }),
+                Sight::make('writeup', 'Writeup'),
+            ]);
         }
+
+        $layout[] = Layout::modal('newBudgetRequest', [
+            Layout::rows([
+                Input::make('budgetRequest.account')
+                    ->title('Account')
+                    ->required(),
+                Input::make('budgetRequest.amount')
+                    ->title('Amount')
+                    ->type('number')
+                    ->required(),
+            ]),
+        ])
+            ->title('New Budget Request');
+
+        $layout[] = Layout::block(
+            Layout::table('programprogress.budgetRequests', [
+                TD::make('', 'Account')
+                    ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
+                        return $budgetRequest->account;
+                    }),
+                TD::make('', 'Amount')
+                    ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
+                        return $budgetRequest->amount;
+                    }),
+                TD::make('', '')
+                    ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
+                        return Button::make('Delete')
+                            ->icon('trash')
+                            ->method('deleteBudgetRequest', ['budgetRequest' => $budgetRequest->id])
+                            ->canSee($this->programprogress->status == 'Drafted'
+                                && Auth::user()->hasAccess('platform.community'));
+                    })
+            ]))
+            ->title('Budget Requests')
+            ->commands(
+                ModalToggle::make('New Budget Request')
+                    ->modal('newBudgetRequest')
+                    ->icon('plus')
+                    ->method('createBudgetRequest')
+                    ->canSee($this->programprogress->status == 'Drafted'),
+            )
+            ->canSee($this->programprogress->exists);
 
         return $layout;
     }
 
     /**
      * Handle creating or updating program report
-     * 
+     *
      * @param ProgramProgress $programprogress
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function createOrUpdate(ProgramProgress $programprogress, Request $request)
     {
@@ -198,9 +193,10 @@ class ProgramProgressEditScreen extends Screen
 
     /**
      * Handle submitting program report
-     * 
+     *
      * @param ProgramProgress $programprogress
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function submit(ProgramProgress $programprogress, Request $request)
     {
@@ -215,9 +211,9 @@ class ProgramProgressEditScreen extends Screen
 
     /**
      * Handle approving program report
-     * 
+     *
      * @param ProgramProgress $programprogress
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function approve(ProgramProgress $programprogress)
     {
@@ -231,7 +227,7 @@ class ProgramProgressEditScreen extends Screen
 
     /**
      * Handle creating budget request
-     * 
+     *
      * @param ProgramProgress $programprogress
      * @param Request $request
      */
@@ -247,7 +243,7 @@ class ProgramProgressEditScreen extends Screen
 
     /**
      * Handle deleting budget request
-     * 
+     *
      * @param Request $request
      */
     public function deleteBudgetRequest(Request $request)
@@ -255,6 +251,6 @@ class ProgramProgressEditScreen extends Screen
         $budgetRequest = ProgramProgressBudgetRequest::find($request->get('budgetRequest'));
         $budgetRequest->delete();
 
-        Toast::info('Budget request deleted.'); 
+        Toast::info('Budget request deleted.');
     }
 }

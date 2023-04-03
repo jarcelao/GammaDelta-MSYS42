@@ -43,25 +43,6 @@ class CommunityListLayout extends Table
             TD::make('language', 'Language')
                 ->filter(TD::FILTER_SELECT, Community::pluck('language', 'language')->toArray())
                 ->sort(),
-            TD::make('', 'Program Status')
-                ->render(function (Community $community) {
-                    return $community->program ? $community->program->status : 'None';
-                })
-                ->filter(TD::FILTER_SELECT, Community::with('program')->get()->pluck('program.status', 'program.status')->toArray()),
-            TD::make('', 'Program Progress Status')
-                ->render(function (Community $community) {
-                    if ($community->program && $community->program->progress->first()) {
-                        return $community->program->progress->sortByDesc('created_at')->first()->status;
-                    } else {
-                        return 'None';
-                    }
-                })
-                ->filter(TD::FILTER_SELECT, Community::with('program')->get()->pluck('program.progress.status', 'program.progress.status')->toArray()),
-            TD::make('', 'Project Status')
-                ->render(function (Community $community) {
-                    return $community->project ? $community->project->status : 'None';
-                })
-                ->filter(TD::FILTER_SELECT, Community::with('project')->get()->pluck('project.status', 'project.status')->toArray()),
         ];
     }
 }
