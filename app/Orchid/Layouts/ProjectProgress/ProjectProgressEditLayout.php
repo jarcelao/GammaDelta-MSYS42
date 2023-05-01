@@ -29,6 +29,7 @@ class ProjectProgressEditLayout extends Rows
             Relation::make('projectprogress.project_id')
                 ->title('Project')
                 ->fromModel(Project::class, 'title')
+                ->applyScope('ofUser', Auth::user())
                 ->required(),
 
             TextArea::make('projectprogress.writeup')

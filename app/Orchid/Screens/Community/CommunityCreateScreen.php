@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Community;
 
 use App\Models\Community;
+use App\Models\CommunityUser;
 use App\Orchid\Layouts\Community\CommunityEditLayout;
 use Illuminate\Http\Request;
 use Orchid\Screen\Action;
@@ -68,7 +69,12 @@ class CommunityCreateScreen extends Screen
         $community->fill($request->get('community'));
         $community->user_id = $request->user()->id;
         $community->save();
-        
+
+        $communityUser = new CommunityUser();
+        $communityUser->community_id = $community->id;
+        $communityUser->user_id = $request->user()->id;
+        $communityUser->save();
+
         Toast::success('Community created');
         return redirect()->route('platform.community');
     }

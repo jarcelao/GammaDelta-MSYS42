@@ -52,6 +52,6 @@ class Project extends Model
         if ($user->hasAnyAccess(['platform.systems.roles', 'platform.systems.users']))
             return $query;
 
-        return $query->whereIn('community_id', $user->communities->pluck('id'));
+        return $query->whereIn('community_id', $user->communities()->pluck('community_id')->toArray());
     }
 }
