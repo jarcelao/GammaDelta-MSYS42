@@ -29,11 +29,7 @@ class CommunityListLayout extends Table
         return [
             TD::make('name', 'Name')
                 ->filter()
-                ->sort()
-                ->render(function (Community $community) {
-                    return Link::make($community->name)
-                        ->route('platform.community.manage', $community->id);
-                }),
+                ->sort(),
             TD::make('country', 'Country')
                 ->filter(TD::FILTER_SELECT, Community::pluck('country', 'country')->toArray())
                 ->sort(),
@@ -43,6 +39,14 @@ class CommunityListLayout extends Table
             TD::make('language', 'Language')
                 ->filter(TD::FILTER_SELECT, Community::pluck('language', 'language')->toArray())
                 ->sort(),
+            TD::make('program.status', 'Program Status'),
+            TD::make('project.status', 'Project Status'),
+            TD::make('', '')
+                ->render(function (Community $community) {
+                    return Link::make('')
+                        ->route('platform.community.manage', $community->id)
+                        ->icon('pencil');
+                })
         ];
     }
 }

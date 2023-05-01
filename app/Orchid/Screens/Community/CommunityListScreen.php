@@ -19,13 +19,17 @@ class CommunityListScreen extends Screen
     {
         if (Auth::user()->hasAccess('platform.community.approve')) {
             return [
-                'communities' => Community::filters()->paginate(),
+                'communities' => Community::with('program', 'project')
+                    ->filters()
+                    ->paginate(),
             ];
         }
 
         if (Auth::user()->hasAccess('platform.community')) {
             return [
-                'communities' => Community::where('user_id', auth()->user()->id)->filters()->paginate(),
+                'communities' => Community::where('user_id', auth()->user()->id)
+                    ->with('program', 'project')
+                    ->paginate(),
             ];
         }
 
