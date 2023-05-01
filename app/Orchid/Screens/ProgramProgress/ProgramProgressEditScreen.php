@@ -135,7 +135,7 @@ class ProgramProgressEditScreen extends Screen
                     ->required(),
                 Input::make('budgetRequest.amount')
                     ->title('Amount')
-                    ->type('number')
+                    ->mask(['alias' => 'currency'])
                     ->required(),
             ]),
         ])
