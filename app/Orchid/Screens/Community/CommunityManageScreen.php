@@ -64,7 +64,7 @@ class CommunityManageScreen extends Screen
                 Sight::make('country', 'Country'),
                 Sight::make('region', 'Region'),
                 Sight::make('language', 'Language'),
-                Sight::make('', 'Creator')
+                Sight::make('', 'Coordinator')
                     ->render(function () {
                         return '
                                 ' . $this->community->user->name . '
@@ -143,7 +143,8 @@ class CommunityManageScreen extends Screen
                         ->route('platform.project.manage', ($this->community->project)
                             ? $this->community->project->id : null)
                         ->icon('pencil'),
-                ),
+                )
+                ->canSee($this->community->program()->exists()),
 
             Layout::block(Layout::table('community.project.progress', [
                 TD::make('created_at', 'Date')
