@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Community;
 
 use App\Orchid\Layouts\Community\CommunityListLayout;
+use App\Orchid\Layouts\DashboardSelection;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
@@ -20,7 +21,7 @@ class CommunityListScreen extends Screen
         if (Auth::user()->hasAccess('platform.community.approve')) {
             return [
                 'communities' => Community::with('program', 'project')
-                    ->filters()
+                    ->filters(DashboardSelection::class)
                     ->paginate(),
             ];
         }
@@ -29,6 +30,7 @@ class CommunityListScreen extends Screen
             return [
                 'communities' => Community::where('user_id', auth()->user()->id)
                     ->with('program', 'project')
+                    ->filters(DashboardSelection::class)
                     ->paginate(),
             ];
         }
@@ -72,6 +74,7 @@ class CommunityListScreen extends Screen
     public function layout(): iterable
     {
         return [
+            DashboardSelection::class,
             CommunityListLayout::class,
         ];
     }
