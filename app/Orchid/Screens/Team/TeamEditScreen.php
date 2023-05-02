@@ -106,8 +106,8 @@ class TeamEditScreen extends Screen
      */
     public function createOrUpdate(Team $team, Request $request)
     {
-        if (Team::where('name', $request->get('team')['name'])->where('id', '!=', $team->id)->first()) {
-            Toast::error('Team name already exists.');
+        if ($team->exists && $team->teamLeader->team->id !== $team->id) {
+            Toast::error('Team leader already has a team.');
             return redirect()->back();
         }
 
