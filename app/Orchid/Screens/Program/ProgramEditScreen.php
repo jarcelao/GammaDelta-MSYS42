@@ -159,6 +159,14 @@ class ProgramEditScreen extends Screen
                         return $programStorySet->storySet->references;
                     }),
                 TD::make('theme', 'Theme'),
+                TD::make('', '')
+                    ->render(function (ProgramStorySet $programStorySet) {
+                        return Button::make('Delete')
+                            ->icon('trash')
+                            ->method('deleteStorySet', ['storySet' => $programStorySet->id])
+                            ->canSee($this->program->status == 'Drafted'
+                                && Auth::user()->hasAccess('platform.community'));
+                    })
             ])
         )
             ->title('Story Sets')
@@ -245,5 +253,18 @@ class ProgramEditScreen extends Screen
         $programStorySet->save();
 
         Toast::info('Story set added.');
+    }
+
+    /**
+     * Handle deleting story set
+     *
+     * @param Request $request
+     */
+    public function deleteStorySet(Request $request)
+    {
+        $programStorySet = ProgramStorySet::find($request->input('storySet'));
+        $programStorySet->delete();
+
+        Toast::info('Story set deleted.');
     }
 }

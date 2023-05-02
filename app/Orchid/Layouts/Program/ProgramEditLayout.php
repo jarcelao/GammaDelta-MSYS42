@@ -40,10 +40,12 @@ class ProgramEditLayout extends Rows
                 ->required(),
 
             TextArea::make('program.purpose')
-                ->title('Purpose'),
+                ->title('Purpose')
+                ->required(),
 
             TextArea::make('program.indicators')
-                ->title('Indicators'),
+                ->title('Indicators')
+                ->required(),
 
             Input::make('program.start_date')
                 ->title('Start Date')
@@ -54,7 +56,8 @@ class ProgramEditLayout extends Rows
                 ->type('date'),
 
             TextArea::make('program.assumptions_and_risks')
-                ->title('Assumptions and Risks'),
+                ->title('Assumptions and Risks')
+                ->required(),
 
             TextArea::make('program.inputs')
                 ->title('Inputs'),

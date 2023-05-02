@@ -153,7 +153,7 @@ class ProgramProgressEditScreen extends Screen
                     }),
                 TD::make('', '')
                     ->render(function (ProgramProgressBudgetRequest $budgetRequest) {
-                        return Button::make('Delete')
+                        return Button::make('')
                             ->icon('trash')
                             ->method('deleteBudgetRequest', ['budgetRequest' => $budgetRequest->id])
                             ->canSee($this->programprogress->status == 'Drafted'

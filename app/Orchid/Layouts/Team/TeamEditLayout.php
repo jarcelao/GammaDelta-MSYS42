@@ -4,6 +4,7 @@ namespace App\Orchid\Layouts\Team;
 
 use App\Models\Community;
 use App\Models\TeamMember;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Layouts\Rows;
@@ -33,6 +34,7 @@ class TeamEditLayout extends Rows
             Relation::make('team.community_id')
                 ->title('Community')
                 ->fromModel(Community::class, 'name')
+                ->applyScope('ofUser', Auth::user())
                 ->required(),
 
             Relation::make('team_members.')

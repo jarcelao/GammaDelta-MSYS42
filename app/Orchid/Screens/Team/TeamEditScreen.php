@@ -84,23 +84,33 @@ class TeamEditScreen extends Screen
 
     /**
      * Handle the creation of a new team member.
-     * 
+     *
      * @param Request $request
      */
     public function createMember(Request $request)
     {
+        if (TeamMember::where('name', $request->get('team_member')['name'])) {
+            Toast::error('Team member already exists.');
+            return;
+        }
+
         TeamMember::create($request->get('team_member'));
         Toast::info('Team member created.');
     }
 
     /**
      * Handle the creation of a new team.
-     * 
+     *
      * @param Team $team
      * @param Request $request
      */
     public function createOrUpdate(Team $team, Request $request)
     {
+        if (Team::where('name', $request->get('team')['name'])->where('id', '!=', $team->id)->first()) {
+            Toast::error('Team name already exists.');
+            return redirect()->back();
+        }
+
         $team->fill($request->get('team'));
 
         $team->save();
@@ -110,7 +120,7 @@ class TeamEditScreen extends Screen
         }
 
         Toast::info('Team saved.');
-        
+
         return redirect()->route('platform.community.manage', $team->community);
     }
 }

@@ -174,16 +174,17 @@ class ProjectProgressEditScreen extends Screen
         $layout[] = Layout::modal('newWorkshop', [
            Layout::rows([
                Input::make('workshop.activity')
-                     ->title('Activity'),
+                   ->title('Activity')
+                   ->required(),
                Input::make('workshop.schedule')
-                    ->title('Schedule')
-                    ->type('date'),
+                   ->title('Schedule')
+                   ->type('date'),
                Input::make('workshop.guest')
-                    ->title('Guest'),
+                   ->title('Guest'),
                Input::make('workshop.outcome')
-                    ->title('Outcome'),
+                   ->title('Outcome'),
                Input::make('workshop.location')
-                    ->title('Location'),
+                   ->title('Location'),
            ]),
         ])
         ->title('New Workshop');
@@ -232,7 +233,8 @@ class ProjectProgressEditScreen extends Screen
         $layout[] = Layout::modal('newPartner', [
             Layout::rows([
                 Input::make('partner.point_person')
-                    ->title('Point Person'),
+                    ->title('Point Person')
+                    ->required(),
                 Input::make('partner.cluster')
                     ->title('Cluster'),
             ]),

@@ -131,7 +131,8 @@ class CommunityManageScreen extends Screen
                         ->icon('plus')
                         ->canSee(Auth::user()->hasAccess('platform.community')),
                 )
-                ->canSee($this->community->program()->exists()),
+                ->canSee($this->community->program()->exists()
+                    && $this->community->program->status == 'Approved'),
 
             Layout::block(Layout::legend('community', [
                 Sight::make('project.title', 'Project Title'),
@@ -144,7 +145,8 @@ class CommunityManageScreen extends Screen
                             ? $this->community->project->id : null)
                         ->icon('pencil'),
                 )
-                ->canSee($this->community->program()->exists()),
+                ->canSee($this->community->program()->exists()
+                    && $this->community->program->status == 'Approved'),
 
             Layout::block(Layout::table('community.project.progress', [
                 TD::make('created_at', 'Date')
@@ -166,7 +168,8 @@ class CommunityManageScreen extends Screen
                         ->icon('plus')
                         ->canSee(Auth::user()->hasAccess('platform.community')),
                 )
-                ->canSee($this->community->project()->exists()),
+                ->canSee($this->community->project()->exists()
+                    && $this->community->project->status == 'Approved'),
         ];
     }
 }

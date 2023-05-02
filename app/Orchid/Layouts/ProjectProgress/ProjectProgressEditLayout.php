@@ -33,7 +33,8 @@ class ProjectProgressEditLayout extends Rows
                 ->required(),
 
             TextArea::make('projectprogress.writeup')
-                ->title('Writeup'),
+                ->title('Writeup')
+                ->required(),
         ];
     }
 }
