@@ -67,7 +67,7 @@ class CommunityCreateScreen extends Screen
      */
     public function create(Community $community, Request $request)
     {
-        if (Community::where('name', $request->get('community')['name'])->first()->exists()) {
+        if (Community::where('name', $request->get('community')['name'])->first()) {
             Toast::error('Community name already exists');
             return redirect()->back();
         }
