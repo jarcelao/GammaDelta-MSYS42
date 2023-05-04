@@ -75,6 +75,7 @@ class TeamEditScreen extends Screen
                     Input::make('team_member.name')
                         ->title('Name')
                         ->placeholder('LAST, Given M.I.')
+                        ->maxlength(100)
                         ->required(),
                 ])
             ])

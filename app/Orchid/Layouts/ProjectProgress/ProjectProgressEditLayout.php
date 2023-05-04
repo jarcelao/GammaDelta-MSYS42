@@ -34,6 +34,7 @@ class ProjectProgressEditLayout extends Rows
 
             TextArea::make('projectprogress.writeup')
                 ->title('Writeup')
+                ->maxlength(5000)
                 ->required(),
         ];
     }

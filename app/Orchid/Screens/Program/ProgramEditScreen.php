@@ -137,12 +137,15 @@ class ProgramEditScreen extends Screen
             Layout::rows([
                 Input::make('storyset.title')
                     ->title('Title')
+                    ->maxlength(100)
                     ->required(),
                 Input::make('storyset.references')
                     ->title('References')
+                    ->maxlength(100)
                     ->required(),
                 Input::make('programstoryset.theme')
                     ->title('Theme')
+                    ->maxlength(100)
                     ->required(),
             ]),
         ])

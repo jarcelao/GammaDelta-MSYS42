@@ -29,6 +29,7 @@ class ProjectEditLayout extends Rows
         return [
             Input::make('project.title')
                 ->title('Title')
+                ->maxlength(100)
                 ->required(),
 
             Relation::make('project.community_id')
@@ -38,27 +39,37 @@ class ProjectEditLayout extends Rows
                 ->required(),
 
             TextArea::make('project.purpose')
-                ->title('Purpose'),
+                ->title('Purpose')
+                ->maxlength(5000)
+                ->required(),
 
             TextArea::make('project.indicators')
-                ->title('Indicators'),
+                ->title('Indicators')
+                ->maxlength(5000)
+                ->required(),
 
             Input::make('project.contact_person')
+                ->maxlength(100)
                 ->title('Contact Person'),
 
             TextArea::make('project.contact_information')
+                ->maxlength(5000)
                 ->title('Contact Information'),
 
             TextArea::make('project.geographical_setting')
+                ->maxlength(5000)
                 ->title('Geographical Setting'),
 
             TextArea::make('project.economic_setting')
+                ->maxlength(5000)
                 ->title('Economic Setting'),
 
             TextArea::make('project.social_setting')
+                ->maxlength(5000)
                 ->title('Social Setting'),
 
             TextArea::make('project.religious_setting')
+                ->maxlength(5000)
                 ->title('Religious Setting'),
         ];
     }

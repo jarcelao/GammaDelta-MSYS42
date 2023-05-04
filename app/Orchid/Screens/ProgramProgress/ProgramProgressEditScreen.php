@@ -132,6 +132,7 @@ class ProgramProgressEditScreen extends Screen
             Layout::rows([
                 Input::make('budgetRequest.account')
                     ->title('Account')
+                    ->maxlength(100)
                     ->required(),
                 Input::make('budgetRequest.amount')
                     ->title('Amount')
@@ -235,6 +236,7 @@ class ProgramProgressEditScreen extends Screen
     {
         $budgetRequest = new ProgramProgressBudgetRequest;
         $budgetRequest->fill($request->get('budgetRequest'));
+        $budgetRequest->amount = abs($budgetRequest->amount);
         $budgetRequest->program_progress_id = $programprogress->id;
         $budgetRequest->save();
 

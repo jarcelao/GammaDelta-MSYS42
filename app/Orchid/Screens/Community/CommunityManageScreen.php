@@ -146,7 +146,8 @@ class CommunityManageScreen extends Screen
                         ->icon('pencil'),
                 )
                 ->canSee($this->community->program()->exists()
-                    && $this->community->program->status == 'Approved'),
+                    && $this->community->program->status == 'Approved'
+                    && $this->community->program->progress()->where('status', 'Funded')->exists()),
 
             Layout::block(Layout::table('community.project.progress', [
                 TD::make('created_at', 'Date')
