@@ -3,9 +3,13 @@
 namespace App\Orchid\Screens\Project;
 
 use App\Models\Project;
+use App\Models\User;
+use App\Notifications\ApproveGranted;
+use App\Notifications\ApproveRequested;
 use App\Orchid\Layouts\Project\ProjectEditLayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Sight;
@@ -161,6 +165,15 @@ class ProjectEditScreen extends Screen
 
         Toast::info('Project submitted.');
 
+        // NOTE: Ensure that the deployed application is set
+        // to contain the role slug 'upper-management'
+
+        $upperManagement = User::whereHas('roles', function ($query) {
+            $query->where('slug', 'upper-management');
+        })->get();
+
+        Notification::send($upperManagement, new ApproveRequested($project));
+
         return redirect()->route('platform.community.manage', $project->community);
     }
 
@@ -176,6 +189,10 @@ class ProjectEditScreen extends Screen
         $project->save();
 
         Toast::info('Project approved.');
+
+        $coordinator = $project->community->user()->get();
+
+        Notification::send($coordinator, new ApproveGranted($project));
 
         return redirect()->route('platform.community.manage', $project->community);
     }

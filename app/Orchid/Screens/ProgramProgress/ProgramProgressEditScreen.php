@@ -4,10 +4,14 @@ namespace App\Orchid\Screens\ProgramProgress;
 
 use App\Models\ProgramProgress;
 use App\Models\ProgramProgressBudgetRequest;
+use App\Models\User;
+use App\Notifications\ApproveGranted;
+use App\Notifications\ApproveRequested;
 use App\Orchid\Layouts\ProgramProgress\ProgramProgressEditLayout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
@@ -205,6 +209,15 @@ class ProgramProgressEditScreen extends Screen
         $programprogress->status = 'For Approval';
         $programprogress->save();
 
+        // NOTE: Ensure that the deployed application is set
+        // to contain the role slug 'upper-management'
+
+        $upperManagement = User::whereHas('roles', function ($query) {
+            $query->where('slug', 'upper-management');
+        })->get();
+
+        Notification::send($upperManagement, new ApproveRequested($programprogress));
+
         Toast::info('Program report submitted.');
 
         return redirect()->route('platform.community.manage', $programprogress->program->community);
@@ -222,6 +235,10 @@ class ProgramProgressEditScreen extends Screen
         $programprogress->save();
 
         Toast::info('Program report funded.');
+
+        $coordinator = $programprogress->program->community->user()->get();
+
+        Notification::send($coordinator, new ApproveGranted($programprogress));
 
         return redirect()->route('platform.community.manage', $programprogress->program->community);
     }
