@@ -4,5 +4,12 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"bmewburn.vscode-intelephense-client",
+			"onecentlin.laravel-extension-pack",
+			"cweijan.vscode-mysql-client2"
+		]
+	}
 }
