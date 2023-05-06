@@ -3,7 +3,9 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"DEVSENSE.phptools-vscode"
+				"bmewburn.vscode-intelephense-client",
+			    "onecentlin.laravel-extension-pack",
+			    "cweijan.vscode-mysql-client2"
 			]
 		}
 	}
