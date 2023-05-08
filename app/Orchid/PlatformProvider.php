@@ -28,17 +28,13 @@ class PlatformProvider extends OrchidServiceProvider
     {
         return [
             Menu::make('Communities')
-                ->icon('globe')
                 ->route('platform.community'),
 
             Menu::make(__('Users'))
-                ->icon('user')
                 ->route('platform.systems.users')
-                ->permission('platform.systems.users')
-                ->title(__('Access rights')),
+                ->permission('platform.systems.users'),
 
             Menu::make(__('Roles'))
-                ->icon('lock')
                 ->route('platform.systems.roles')
                 ->permission('platform.systems.roles'),
         ];
@@ -51,8 +47,7 @@ class PlatformProvider extends OrchidServiceProvider
     {
         return [
             Menu::make(__('Profile'))
-                ->route('platform.profile')
-                ->icon('user'),
+                ->route('platform.profile'),
         ];
     }
 
