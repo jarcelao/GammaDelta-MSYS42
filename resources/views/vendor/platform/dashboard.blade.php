@@ -2,7 +2,7 @@
 
 @section('body-left')
 
-    <div class="aside col-xs-12 col-md-2" style="background-color: #4F1514;">
+    <div class="aside col-xs-12 col-md-2 bg-dark" style="background-color: #4F1514 !important;">
         <div class="d-md-flex align-items-start flex-column d-sm-block h-full">
 
             <header class="d-sm-flex d-md-block p-3 mt-md-4 w-100 d-flex align-items-center">
@@ -25,7 +25,7 @@
 
                 @includeWhen(Auth::check(), 'platform::partials.profile')
 
-                <ul class="nav flex-column mb-1 ps-0">
+                <ul class="flex-column mb-1 ps-0">
                     {!! Dashboard::renderMenu(\Orchid\Platform\Dashboard::MENU_MAIN) !!}
                 </ul>
 
@@ -35,7 +35,7 @@
                  data-action="click->html-load#goToTop"
                  title="{{ __('Scroll to top') }}">
                 <div class="bottom-left w-100 mb-2 ps-3">
-                    <small class="text-light">
+                    <small>
                         <x-orchid-icon path="arrow-up" class="me-2"/>
 
                         {{ __('Scroll to top') }}
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <footer class="p-3 mb-2 m-t d-none d-lg-block w-100 text-light">
+            <footer class="p-3 mb-2 m-t d-none d-lg-block w-100">
                 @includeFirst([config('platform.template.footer'), 'platform::footer'])
             </footer>
 
