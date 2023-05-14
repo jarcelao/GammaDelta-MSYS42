@@ -336,7 +336,7 @@ class ProjectProgressEditScreen extends Screen
 
         Toast::info('Project report approved.');
 
-        $coordinator = $projectprogress->program->community->user()->get();
+        $coordinator = $projectprogress->project->community->user()->get();
 
         Notification::send($coordinator, new ApproveGranted($projectprogress));
 
