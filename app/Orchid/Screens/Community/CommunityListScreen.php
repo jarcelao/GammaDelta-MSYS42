@@ -45,7 +45,7 @@ class CommunityListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Community Dashboard';
+        return 'Main Dashboard';
     }
 
     /**
