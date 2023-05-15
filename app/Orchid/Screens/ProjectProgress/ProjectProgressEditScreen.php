@@ -172,7 +172,8 @@ class ProjectProgressEditScreen extends Screen
                     ->modal('newBudgetRequest')
                     ->icon('plus')
                     ->method('createBudgetRequest')
-                    ->canSee($this->projectprogress->status == 'Drafted'),
+                    ->canSee($this->projectprogress->status == 'Drafted'
+                        && Auth::user()->hasAccess('platform.community')),
             )
             ->canSee($this->projectprogress->exists);
 
