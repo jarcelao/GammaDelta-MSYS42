@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('project_progress_id')->constrained('project_progress');
             $table->string('account')->nullable();
-            $table->float('amount')->nullable();
+            $table->decimal('amount', $precision = 10, $scale = 2)->nullable();
         });
     }
 
