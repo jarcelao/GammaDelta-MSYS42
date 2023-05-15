@@ -253,7 +253,7 @@ class ProgramProgressEditScreen extends Screen
     {
         $budgetRequest = new ProgramProgressBudgetRequest;
         $budgetRequest->fill($request->get('budgetRequest'));
-        $budgetRequest->amount = abs($budgetRequest->amount);
+        $budgetRequest->amount = abs(floatval(str_replace(',', '', $budgetRequest->amount)));
         $budgetRequest->program_progress_id = $programprogress->id;
         $budgetRequest->save();
 

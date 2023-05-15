@@ -354,7 +354,7 @@ class ProjectProgressEditScreen extends Screen
         $budgetRequest = new ProjectProgressBudgetRequest();
         $budgetRequest->fill($request->get('budgetRequest'));
         $budgetRequest->project_progress_id = $projectprogress->id;
-        $budgetRequest->amount = abs($budgetRequest->amount);
+        $budgetRequest->amount = abs(floatval(str_replace(',', '', $budgetRequest->amount)));
         $budgetRequest->save();
 
         Toast::info('Budget request created.');
