@@ -5,9 +5,13 @@ namespace App\Orchid\Screens\Program;
 use App\Models\Program;
 use App\Models\StorySet;
 use App\Models\ProgramStorySet;
+use App\Models\User;
+use App\Notifications\ApproveGranted;
+use App\Notifications\ApproveRequested;
 use App\Orchid\Layouts\Program\ProgramEditLayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
@@ -137,12 +141,15 @@ class ProgramEditScreen extends Screen
             Layout::rows([
                 Input::make('storyset.title')
                     ->title('Title')
+                    ->maxlength(100)
                     ->required(),
                 Input::make('storyset.references')
                     ->title('References')
+                    ->maxlength(100)
                     ->required(),
                 Input::make('programstoryset.theme')
                     ->title('Theme')
+                    ->maxlength(100)
                     ->required(),
             ]),
         ])
@@ -159,6 +166,14 @@ class ProgramEditScreen extends Screen
                         return $programStorySet->storySet->references;
                     }),
                 TD::make('theme', 'Theme'),
+                TD::make('', '')
+                    ->render(function (ProgramStorySet $programStorySet) {
+                        return Button::make('Delete')
+                            ->icon('trash')
+                            ->method('deleteStorySet', ['storySet' => $programStorySet->id])
+                            ->canSee($this->program->status == 'Drafted'
+                                && Auth::user()->hasAccess('platform.community'));
+                    })
             ])
         )
             ->title('Story Sets')
@@ -207,6 +222,15 @@ class ProgramEditScreen extends Screen
 
         Toast::info('Program submitted.');
 
+        // NOTE: Ensure that the deployed application is set
+        // to contain the role slug 'upper-management'
+
+        $upperManagement = User::whereHas('roles', function ($query) {
+            $query->where('slug', 'upper-management');
+        })->get();
+
+        Notification::send($upperManagement, new ApproveRequested($program));
+
         return redirect()->route('platform.community.manage', $program->community);
     }
 
@@ -222,6 +246,10 @@ class ProgramEditScreen extends Screen
         $program->save();
 
         Toast::info('Program approved.');
+
+        $coordinator = $program->community->user()->get();
+
+        Notification::send($coordinator, new ApproveGranted($program));
 
         return redirect()->route('platform.community.manage', $program->community);
     }
@@ -245,5 +273,18 @@ class ProgramEditScreen extends Screen
         $programStorySet->save();
 
         Toast::info('Story set added.');
+    }
+
+    /**
+     * Handle deleting story set
+     *
+     * @param Request $request
+     */
+    public function deleteStorySet(Request $request)
+    {
+        $programStorySet = ProgramStorySet::find($request->input('storySet'));
+        $programStorySet->delete();
+
+        Toast::info('Story set deleted.');
     }
 }

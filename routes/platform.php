@@ -116,25 +116,25 @@ Route::screen('programs/manage/{program?}', ProgramEditScreen::class)
     ->name('platform.program.manage')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Manage'), route('platform.program.manage')));
+        ->push(__('Manage Program'), route('platform.program.manage')));
 
 // Platform > Manage Program Report
 Route::screen('programs/report/{programprogess?}', ProgramProgressEditScreen::class)
     ->name('platform.program.report')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Manage'), route('platform.program.report')));
+        ->push(__('Manage Program Progress'), route('platform.program.report')));
 
 // Platform > Manage Project
 Route::screen('projects/manage/{project?}', ProjectEditScreen::class)
     ->name('platform.project.manage')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Manage'), route('platform.project.manage')));
+        ->push(__('Manage Project'), route('platform.project.manage')));
 
 // Platform > Manage Project Report
 Route::screen('projects/report/{projectprogess?}', ProjectProgressEditScreen::class)
     ->name('platform.project.report')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Manage'), route('platform.project.report')));
+        ->push(__('Manage Project Progress'), route('platform.project.report')));

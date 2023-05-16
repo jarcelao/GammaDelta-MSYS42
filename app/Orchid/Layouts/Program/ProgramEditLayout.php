@@ -31,6 +31,7 @@ class ProgramEditLayout extends Rows
         return [
             Input::make('program.title')
                 ->title('Title')
+                ->maxlength(100)
                 ->required(),
 
             Relation::make('program.community_id')
@@ -40,35 +41,48 @@ class ProgramEditLayout extends Rows
                 ->required(),
 
             TextArea::make('program.purpose')
-                ->title('Purpose'),
+                ->title('Purpose')
+                ->maxlength(5000)
+                ->required(),
 
             TextArea::make('program.indicators')
-                ->title('Indicators'),
+                ->title('Indicators')
+                ->maxlength(5000)
+                ->required(),
 
             Input::make('program.start_date')
                 ->title('Start Date')
+                ->maxlength(100)
                 ->type('date'),
 
             Input::make('program.end_date')
                 ->title('End Date')
+                ->maxlength(100)
                 ->type('date'),
 
             TextArea::make('program.assumptions_and_risks')
-                ->title('Assumptions and Risks'),
+                ->title('Assumptions and Risks')
+                ->maxlength(5000)
+                ->required(),
 
             TextArea::make('program.inputs')
+                ->maxlength(5000)
                 ->title('Inputs'),
 
             TextArea::make('program.activities')
+                ->maxlength(5000)
                 ->title('Activities'),
 
             TextArea::make('program.outputs')
+                ->maxlength(5000)
                 ->title('Outputs'),
 
             TextArea::make('program.outcomes')
+                ->maxlength(5000)
                 ->title('Outcomes'),
 
             TextArea::make('program.why')
+                ->maxlength(5000)
                 ->title('Why'),
         ];
     }

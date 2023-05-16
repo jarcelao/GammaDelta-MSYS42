@@ -26,22 +26,26 @@ class CommunityEditLayout extends Rows
             Input::make('community.name')
                     ->title('Name')
                     ->placeholder('Maranao')
+                    ->maxlength(100)
                     ->required(),
-                
+
             Input::make('community.country')
                 ->title('Country')
                 ->placeholder('PH')
                 ->help('Enter a two-letter country code.')
+                ->maxlength(100)
                 ->required(),
 
             Input::make('community.region')
                 ->title('Region')
                 ->placeholder('Marawi')
+                ->maxlength(100)
                 ->required(),
 
             Input::make('community.language')
                 ->title('Language')
                 ->placeholder('Filipino')
+                ->maxlength(100)
                 ->required(),
         ];
     }

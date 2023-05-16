@@ -29,10 +29,13 @@ class ProgramProgressEditLayout extends Rows
             Relation::make('programprogress.program_id')
                 ->title('Program')
                 ->fromModel(Program::class, 'title')
+                ->applyScope('ofUser', Auth::user())
                 ->required(),
 
             TextArea::make('programprogress.writeup')
-                ->title('Writeup'),
+                ->title('Writeup')
+                ->maxlength(5000)
+                ->required(),
         ];
     }
 }

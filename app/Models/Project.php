@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 class Project extends Model
 {
-    use AsSource;
+    use AsSource, Filterable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +26,15 @@ class Project extends Model
         'economic_setting',
         'social_setting',
         'religious_setting',
+        'status',
+    ];
+
+    /**
+     * The attributes that can be filtered.
+     *
+     * @var array
+     */
+    protected $allowedFilters = [
         'status',
     ];
 
@@ -52,6 +62,6 @@ class Project extends Model
         if ($user->hasAnyAccess(['platform.systems.roles', 'platform.systems.users']))
             return $query;
 
-        return $query->whereIn('community_id', $user->communities->pluck('id'));
+        return $query->whereIn('community_id', $user->communities()->pluck('community_id')->toArray());
     }
 }

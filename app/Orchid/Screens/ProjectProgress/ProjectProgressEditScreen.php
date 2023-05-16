@@ -5,11 +5,15 @@ namespace App\Orchid\Screens\ProjectProgress;
 use App\Models\Partner;
 use App\Models\ProjectProgress;
 use App\Models\ProjectProgressBudgetRequest;
+use App\Models\User;
 use App\Models\Workshop;
+use App\Notifications\ApproveGranted;
+use App\Notifications\ApproveRequested;
 use App\Orchid\Layouts\ProjectProgress\ProjectProgressEditLayout;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
@@ -136,6 +140,8 @@ class ProjectProgressEditScreen extends Screen
                     ->required(),
                 Input::make('budgetRequest.amount')
                     ->title('Amount')
+                    ->mask(['alias' => 'currency'])
+                    ->maxlength(14)
                     ->required(),
             ]),
         ])
@@ -166,23 +172,25 @@ class ProjectProgressEditScreen extends Screen
                     ->modal('newBudgetRequest')
                     ->icon('plus')
                     ->method('createBudgetRequest')
-                    ->canSee($this->projectprogress->status == 'Drafted'),
+                    ->canSee($this->projectprogress->status == 'Drafted'
+                        && Auth::user()->hasAccess('platform.community')),
             )
             ->canSee($this->projectprogress->exists);
 
         $layout[] = Layout::modal('newWorkshop', [
            Layout::rows([
                Input::make('workshop.activity')
-                     ->title('Activity'),
+                   ->title('Activity')
+                   ->required(),
                Input::make('workshop.schedule')
-                    ->title('Schedule')
-                    ->type('date'),
+                   ->title('Schedule')
+                   ->type('date'),
                Input::make('workshop.guest')
-                    ->title('Guest'),
+                   ->title('Guest'),
                Input::make('workshop.outcome')
-                    ->title('Outcome'),
+                   ->title('Outcome'),
                Input::make('workshop.location')
-                    ->title('Location'),
+                   ->title('Location'),
            ]),
         ])
         ->title('New Workshop');
@@ -231,7 +239,8 @@ class ProjectProgressEditScreen extends Screen
         $layout[] = Layout::modal('newPartner', [
             Layout::rows([
                 Input::make('partner.point_person')
-                    ->title('Point Person'),
+                    ->title('Point Person')
+                    ->required(),
                 Input::make('partner.cluster')
                     ->title('Cluster'),
             ]),
@@ -301,6 +310,15 @@ class ProjectProgressEditScreen extends Screen
         $projectprogress->status = 'For Approval';
         $projectprogress->save();
 
+        // NOTE: Ensure that the deployed application is set
+        // to contain the role slug 'upper-management'
+
+        $upperManagement = User::whereHas('roles', function ($query) {
+            $query->where('slug', 'upper-management');
+        })->get();
+
+        Notification::send($upperManagement, new ApproveRequested($projectprogress));
+
         Toast::info('Project report submitted.');
 
         return redirect()->route('platform.community.manage', $projectprogress->project->community);
@@ -320,6 +338,10 @@ class ProjectProgressEditScreen extends Screen
 
         Toast::info('Project report approved.');
 
+        $coordinator = $projectprogress->project->community->user()->get();
+
+        Notification::send($coordinator, new ApproveGranted($projectprogress));
+
         return redirect()->route('platform.community.manage', $projectprogress->project->community);
     }
 
@@ -334,6 +356,7 @@ class ProjectProgressEditScreen extends Screen
         $budgetRequest = new ProjectProgressBudgetRequest();
         $budgetRequest->fill($request->get('budgetRequest'));
         $budgetRequest->project_progress_id = $projectprogress->id;
+        $budgetRequest->amount = abs(floatval(str_replace(',', '', $budgetRequest->amount)));
         $budgetRequest->save();
 
         Toast::info('Budget request created.');

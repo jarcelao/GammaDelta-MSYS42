@@ -64,7 +64,7 @@ class CommunityManageScreen extends Screen
                 Sight::make('country', 'Country'),
                 Sight::make('region', 'Region'),
                 Sight::make('language', 'Language'),
-                Sight::make('', 'Creator')
+                Sight::make('', 'Coordinator')
                     ->render(function () {
                         return '
                                 ' . $this->community->user->name . '
@@ -131,7 +131,8 @@ class CommunityManageScreen extends Screen
                         ->icon('plus')
                         ->canSee(Auth::user()->hasAccess('platform.community')),
                 )
-                ->canSee($this->community->program()->exists()),
+                ->canSee($this->community->program()->exists()
+                    && $this->community->program->status == 'Approved'),
 
             Layout::block(Layout::legend('community', [
                 Sight::make('project.title', 'Project Title'),
@@ -143,7 +144,10 @@ class CommunityManageScreen extends Screen
                         ->route('platform.project.manage', ($this->community->project)
                             ? $this->community->project->id : null)
                         ->icon('pencil'),
-                ),
+                )
+                ->canSee($this->community->program()->exists()
+                    && $this->community->program->status == 'Approved'
+                    && $this->community->program->progress()->where('status', 'Funded')->exists()),
 
             Layout::block(Layout::table('community.project.progress', [
                 TD::make('created_at', 'Date')
@@ -165,7 +169,8 @@ class CommunityManageScreen extends Screen
                         ->icon('plus')
                         ->canSee(Auth::user()->hasAccess('platform.community')),
                 )
-                ->canSee($this->community->project()->exists()),
+                ->canSee($this->community->project()->exists()
+                    && $this->community->project->status == 'Approved'),
         ];
     }
 }

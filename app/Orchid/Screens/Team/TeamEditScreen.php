@@ -75,6 +75,7 @@ class TeamEditScreen extends Screen
                     Input::make('team_member.name')
                         ->title('Name')
                         ->placeholder('LAST, Given M.I.')
+                        ->maxlength(100)
                         ->required(),
                 ])
             ])
@@ -84,24 +85,34 @@ class TeamEditScreen extends Screen
 
     /**
      * Handle the creation of a new team member.
-     * 
+     *
      * @param Request $request
      */
     public function createMember(Request $request)
     {
+        if (TeamMember::where('name', $request->get('team_member')['name'])->exists()) {
+            Toast::error('Team member already exists.');
+            return;
+        }
+
         TeamMember::create($request->get('team_member'));
         Toast::info('Team member created.');
     }
 
     /**
      * Handle the creation of a new team.
-     * 
+     *
      * @param Team $team
      * @param Request $request
      */
     public function createOrUpdate(Team $team, Request $request)
     {
         $team->fill($request->get('team'));
+
+        if ($team->teamLeader->team()->exists() && $team->teamLeader->team->id !== $team->id) {
+            Toast::error('Team leader already has a team.');
+            return redirect()->back();
+        }
 
         $team->save();
 
@@ -110,7 +121,7 @@ class TeamEditScreen extends Screen
         }
 
         Toast::info('Team saved.');
-        
+
         return redirect()->route('platform.community.manage', $team->community);
     }
 }
